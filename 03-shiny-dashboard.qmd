@@ -1,0 +1,30 @@
+---
+title: "Dashboard Shiny Integrado"
+---
+
+O dashboard interativo faz cálculo de AQI, exibe mapas leaflet, séries temporais e correlações.
+
+### Versão pública (shinyapps.io)
+
+[Dashboard em produção](https://rmcqualidadedoar.shinyapps.io/dados/)
+
+### Iframe
+
+```{=html}
+<iframe src="https://rmcqualidadedoar.shinyapps.io/dados/" width="100%" height="800" style="border:1px solid #ccc;"></iframe>
+```
+
+### Código-Fonte
+
+O arquivo `app.R` incluído no repositório pode ser executado localmente após carregar dependências:
+
+```r
+shiny::runApp()
+```
+
+Principais pontos:
+- Carregamento global dos dados
+- Uso de `pollutionRose`, `aqStats`, `polarMap`
+- Escalas de cores do AQI com `colorBin`
+- Evita repetição de IDs (corrigido)
+- Integra PurpleAir + GM-5000 num único objeto combinado

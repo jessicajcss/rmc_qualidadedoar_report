@@ -1,0 +1,19 @@
+{
+  "hash": "b20511f539d324ecaba4d5251df2216f",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Visão Geral\"\n---\n\n\n\nEste relatório apresenta a caracterização da qualidade do ar e meteorologia em municípios selecionados da Região Metropolitana de Curitiba (RMC), com base em:\n\n- Sensores GM-5000 (gases + PM)\n- Sensores PurpleAir (PM2.5)\n- Dados meteorológicos (vento, temperatura, umidade, precipitação, pressão, radiação)\n- Cálculo e representação de AQI / diretrizes da OMS\n\nConteúdos principais:\n1. Fontes e estrutura dos dados\n2. Séries e climatologia meteorológica\n3. Integração com dashboard Shiny\n4. Padrões temporais hora × dia da semana\n5. Influência meteorológica (polar plots / rosas)\n6. Mapas de sensores e concentrações médias\n7. Estatísticas resumidas (`aqStats`)\n8. Anexos (sessão, tabelas WHO / AQI)\n\nO dashboard interativo está disponível também como capítulo (iframe) e/ou separado via shinyapps.io.\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,0 +1,33 @@
+---
+title: "Meteorologia e Potenciais Fontes (Polar / Vento)"
+---
+
+```{r}
+library(openair)
+```
+
+### Polar plots (exemplo NO2)
+
+```{r}
+if (exists("air_quality_data_ugm3") && exists("meteo_hour")) {
+  joined <- air_quality_data_ugm3 %>%
+    left_join(meteo_hour %>% select(date, ws, wd, Cidade), by="date")
+
+  joined %>%
+    filter(Cidade == "Rio Branco do Sul") %>%
+    openair::polarPlot(pollutant="NO2", ws="ws", wd="wd", main="NO2 vs. vento — RBS")
+}
+```
+
+### `pollutionRose` aplicado a PM2.5 sintetizado
+
+```{r}
+if (exists("purpleair") && exists("meteo_hour")) {
+  pa_join <- purpleair %>%
+    left_join(meteo_hour %>% select(date, ws, wd, Cidade), by=c("Date"="date"))
+
+  pa_join %>%
+    openair::pollutionRose(pollutant="PM2.5", type="Cidade", hemisphere="southern",
+                           key.footer="PM2.5 (µg/m³)")
+}
+```

@@ -1,0 +1,21 @@
+---
+title: "Anexos"
+---
+
+### Tabela AQI
+
+```{r}
+if (exists("AQItab")) DT::datatable(AQItab)
+```
+
+### Poltab (Precauções)
+
+```{r}
+if (exists("Poltab")) DT::datatable(Poltab)
+```
+
+### Sessão
+
+```{r}
+sessionInfo()
+```

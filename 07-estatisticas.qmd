@@ -1,0 +1,30 @@
+---
+title: "Estatísticas Resumidas"
+---
+
+```{r}
+library(openair)
+library(DT)
+```
+
+### aqStats (GM-5000)
+
+```{r}
+if (exists("air_quality_data_ugm3")) {
+  stats_gm <- air_quality_data_ugm3 %>%
+    aqStats(type="Cidade", pollutant=c("SO2","NO2","O3","CO","PM2.5","PM10"))
+  DT::datatable(stats_gm)
+}
+```
+
+### aqStats (PurpleAir PM2.5)
+
+```{r}
+if (exists("purpleair")) {
+  stats_pa <- purpleair %>%
+    select(Cidade, Date, PM2.5) %>%
+    rename(date = Date) %>%
+    aqStats(type="Cidade", pollutant="PM2.5")
+  DT::datatable(stats_pa)
+}
+```

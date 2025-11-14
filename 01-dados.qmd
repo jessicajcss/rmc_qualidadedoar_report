@@ -1,0 +1,55 @@
+---
+title: "Dados e Métodos"
+---
+
+```{r}
+library(tidyverse)
+library(DT)
+```
+
+## Objetos carregados
+
+```{r}
+ls()
+```
+
+### Meteorologia (horária)
+
+```{r}
+if (exists("meteo_hour")) dplyr::glimpse(meteo_hour)
+```
+
+### Qualidade do ar — diário (GM-5000)
+
+```{r}
+if (exists("Datafinal")) dplyr::glimpse(Datafinal)
+```
+
+### Qualidade do ar — horário (GM-5000)
+
+```{r}
+if (exists("air_quality_data_ugm3")) dplyr::glimpse(air_quality_data_ugm3)
+```
+
+### PurpleAir (PM2.5 diário corrigido)
+
+```{r}
+if (exists("purpleair")) dplyr::glimpse(purpleair)
+```
+
+### Tabelas auxiliares (AQI e precauções)
+
+```{r}
+if (exists("Poltab")) head(Poltab)
+if (exists("AQItab")) head(AQItab)
+```
+
+## Diretrizes OMS
+
+```{r}
+if (exists("who_limit_all")) who_limit_all
+```
+
+## Nota sobre horários e TZ
+
+Todas as datas são normalizadas para "America/Sao_Paulo". Manter consistência é essencial para agregações diárias e cálculo de médias móveis (ex.: O3 8h).

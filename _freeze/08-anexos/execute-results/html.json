@@ -1,0 +1,19 @@
+{
+  "hash": "a437fb33df0e4f2a77545fc308141215",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Anexos\"\n---\n\n### Tabela AQI\n\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nif (exists(\"AQItab\")) DT::datatable(AQItab)\n```\n:::\n\n\n### Poltab (Precauções)\n\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nif (exists(\"Poltab\")) DT::datatable(Poltab)\n```\n:::\n\n\n### Sessão\n\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nsessionInfo()\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\nR version 4.4.3 (2025-02-28 ucrt)\nPlatform: x86_64-w64-mingw32/x64\nRunning under: Windows 11 x64 (build 26100)\n\nMatrix products: default\n\n\nlocale:\n[1] LC_COLLATE=Portuguese_Brazil.utf8  LC_CTYPE=Portuguese_Brazil.utf8   \n[3] LC_MONETARY=Portuguese_Brazil.utf8 LC_NUMERIC=C                      \n[5] LC_TIME=Portuguese_Brazil.utf8    \n\ntime zone: America/Sao_Paulo\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nloaded via a namespace (and not attached):\n [1] htmlwidgets_1.6.4 compiler_4.4.3    fastmap_1.2.0     cli_3.6.5        \n [5] tools_4.4.3       htmltools_0.5.8.1 rstudioapi_0.17.1 yaml_2.3.10      \n [9] codetools_0.2-20  rmarkdown_2.29    knitr_1.50        jsonlite_2.0.0   \n[13] xfun_0.53         digest_0.6.37     rlang_1.1.6       evaluate_1.0.5   \n```\n\n\n:::\n:::\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

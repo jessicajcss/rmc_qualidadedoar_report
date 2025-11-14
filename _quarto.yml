@@ -1,0 +1,59 @@
+project:
+  type: book
+
+# Se quiser usar docs/ em vez de gh-pages:
+# output-dir: docs
+
+book:
+  title: "Relatório Técnico Interativo — Qualidade do Ar (RMC)"
+  author: ["Equipe Qualidade do Ar RMC"]
+  date: today
+  language: pt
+  chapters:
+    - index.qmd
+    - 01-dados.qmd
+    - 02-meteorologia.qmd
+    - 03-shiny-dashboard.qmd
+    - 04-qualidade-ar.qmd
+    - 05-fontes-meteo.qmd
+    - 06-mapas.qmd
+    - 07-estatisticas.qmd
+    - 08-anexos.qmd
+
+website:
+  site-url: https://jessicajcss.github.io/rmc-qualidade-ar-relatorio/
+  favicon: assets/favicon.png
+  navbar:
+    search: true
+    right:
+      - text: "Dashboard Shiny"
+        href: https://rmcqualidadedoar.shinyapps.io/dados/
+      - icon: github
+        href: https://github.com/jessicajcss/rmc-qualidade-ar-relatorio
+
+format:
+  html:
+    theme:
+      light: cosmo
+    number-sections: true
+    toc: true
+    toc-depth: 3
+    code-fold: show
+    code-tools: true
+    css: styles.scss
+    df-print: paged
+  pdf:
+    documentclass: scrreprt
+
+execute:
+  freeze: auto
+  cache: true
+
+knitr:
+  opts_chunk:
+    echo: true
+    warning: false
+    message: false
+    fig.width: 9
+    fig.asp: 0.55
+    fig.align: center

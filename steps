@@ -1,0 +1,82 @@
+Copilot said: ## Passo a passo (RStudio + Quarto
+Passo a passo (RStudio + Quarto + GitHub Pages)
+1. Preparar ambiente local
+Instale o Quarto (se ainda não):
+Download: https://quarto.org/docs/get-started/
+Verifique em R: quarto::quarto_version()
+Atualize R (>= 4.2) e abra o RStudio.
+Instale os pacotes do projeto (será fornecido um script scripts/install_packages.R).
+
+2. Criar o projeto no RStudio
+File > New Project > New Directory > Empty Project (ex: rmc-qualidade-ar-relatorio).
+Dentro da pasta do projeto, crie as subpastas:
+scripts/
+data/ (opcional se quiser armazenar local)
+data/data_input/ (para CSVs opcionais)
+output/ (figuras, estatísticas)
+.github/workflows/ (para GitHub Actions – publicação automática)
+Adicione os arquivos fornecidos abaixo.
+
+3. Testar renderização local
+Rode: source("scripts/install_packages.R")
+Renderize o livro: no terminal RStudio ou shell
+Code
+quarto render
+Resultado será criado em _book/.
+
+4. Criar repositório GitHub
+No GitHub: New Repository → Nome sugerido: rmc-qualidade-ar-relatorio.
+Faça o primeiro commit e push (pode usar o Git do RStudio ou terminal):
+Code
+git init
+git add .
+git commit -m "Inicial: Relatório Quarto RMC"
+git branch -M main
+git remote add origin git@github.com:jessicajcss/rmc-qualidade-ar-relatorio.git
+git push -u origin main
+
+5. Publicar via GitHub Pages (duas opções)
+Opção A (Automática via GitHub Actions — recomendada para Quarto)
+Use o arquivo .github/workflows/publish.yml incluído abaixo.
+Vá em Settings > Pages > Source: selecione “Deploy from a branch” e escolha gh-pages quando aparecer (depois do primeiro workflow).
+Acesse em: https://jessicajcss.github.io/rmc-qualidade-ar-relatorio/
+Opção B (Sem Actions — usando pasta docs/)
+Ajuste _quarto.yml adicionando:
+Code
+output-dir: docs
+Renderize local (quarto render) e faça commit da pasta docs/.
+Em Settings > Pages > Source: selecione main / docs.
+Acesse URL igual à opção A.
+
+6. Inserir o App Shiny
+Inclua o arquivo app.R (fornecido) no repositório.
+Você pode:
+Publicá-lo separadamente no shinyapps.io (já faz).
+Embutir um iframe em um capítulo do relatório (já incluído no capítulo 03-shiny-dashboard.qmd).
+
+
+
+7. Ajustar o site-url (importante para links relativos)
+No _quarto.yml, ajuste:
+
+Code
+website:
+  site-url: https://jessicajcss.github.io/rmc-qualidade-ar-relatorio/
+
+8. Atualizar dados
+O script scripts/00-load_data.R baixa diretamente os arquivos .Rda e .rds do seu repositório ScheduledUpdate.
+Se quiser cache local, salve cópias em data/.
+
+9. Publicar alterações
+Sempre que alterar:
+
+Code
+git add .
+git commit -m "Atualização conteúdo"
+git push
+Se usar Actions, a publicação é automática.
+
+10. Customizações recomendadas
+Adicionar LICENSE (ex: MIT).
+Adicionar badges (GitHub Actions status).
+Ajustar tema e favicon (colocar em www/ e referenciar em _quarto.yml).

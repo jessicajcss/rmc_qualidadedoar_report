@@ -1,0 +1,19 @@
+{
+  "hash": "90c646b7c628cd3bda1401f641ce254d",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Estatísticas Resumidas\"\n---\n\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nlibrary(openair)\nlibrary(DT)\n```\n:::\n\n\n### aqStats (GM-5000)\n\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nif (exists(\"air_quality_data_ugm3\")) {\n  stats_gm <- air_quality_data_ugm3 %>%\n    aqStats(type=\"Cidade\", pollutant=c(\"SO2\",\"NO2\",\"O3\",\"CO\",\"PM2.5\",\"PM10\"))\n  DT::datatable(stats_gm)\n}\n```\n:::\n\n\n### aqStats (PurpleAir PM2.5)\n\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nif (exists(\"purpleair\")) {\n  stats_pa <- purpleair %>%\n    select(Cidade, Date, PM2.5) %>%\n    rename(date = Date) %>%\n    aqStats(type=\"Cidade\", pollutant=\"PM2.5\")\n  DT::datatable(stats_pa)\n}\n```\n:::\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {
+      "knitr": [
+        "{\"type\":\"list\",\"attributes\":{},\"value\":[]}"
+      ]
+    },
+    "preserve": null,
+    "postProcess": false
+  }
+}

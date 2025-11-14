@@ -1,0 +1,17 @@
+# Quarto build
+_book/
+docs/
+*.html
+
+# R
+.Rhistory
+.Rproj.user/
+.RData
+.Ruserdata
+
+# Cache
+.cache/
+__pycache__/
+
+# Shiny temp
+rsconnect/
