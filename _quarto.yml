@@ -1,13 +1,13 @@
 project:
   type: book
 
-# Se quiser usar docs/ em vez de gh-pages:
-# output-dir: docs
+# Pasta de saída (HTML final) gerada pelo quarto render
+output-dir: _book
 
 book:
   title: "Relatório Técnico Interativo — Qualidade do Ar (RMC)"
   author: ["Equipe Qualidade do Ar RMC"]
-  date: today
+  date: "`r Sys.Date()`"
   language: pt
   chapters:
     - index.qmd
@@ -23,13 +23,6 @@ book:
 website:
   site-url: https://jessicajcss.github.io/rmc-qualidade-ar-relatorio/
   favicon: assets/favicon.png
-  navbar:
-    search: true
-    right:
-      - text: "Dashboard Shiny"
-        href: https://rmcqualidadedoar.shinyapps.io/dados/
-      - icon: github
-        href: https://github.com/jessicajcss/rmc-qualidade-ar-relatorio
 
 format:
   html:
@@ -42,18 +35,18 @@ format:
     code-tools: true
     css: styles.scss
     df-print: paged
-  pdf:
-    documentclass: scrreprt
 
 execute:
-  freeze: auto
+  # garante que os chunks sejam avaliados durante render
+  enabled: true
+  freeze: false
   cache: true
 
 knitr:
   opts_chunk:
     echo: true
-    warning: false
     message: false
+    warning: false
     fig.width: 9
     fig.asp: 0.55
     fig.align: center

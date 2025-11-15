@@ -1,0 +1,19 @@
+{
+  "hash": "136b467b1f520f72eaf8b7b12114e705",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Mapas Interativos\"\n---\n\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nlibrary(leaflet)\n```\n:::\n\n\nCaso os dados de localização estejam no objeto `localizacao`, geramos mapa interativo dos sensores.\n\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nif (exists(\"localizacao\")) {\n  df_map <- localizacao %>%\n    mutate(popup = paste0(\"<b>\", Local, \"</b><br/>Cidade: \", Cidade,\n                          \"<br/>Tipo: \", Tipo))\n  pal <- colorFactor(RColorBrewer::brewer.pal(5,\"Set2\"), df_map$Cidade)\n\n  leaflet(df_map) %>%\n    addTiles() %>%\n    addCircleMarkers(~Long, ~Lat,\n                     color=~pal(Cidade),\n                     radius=6,\n                     stroke=TRUE, weight=1,\n                     fillOpacity=0.8,\n                     popup=~popup) %>%\n    addLegend(\"bottomright\", pal=pal, values=~Cidade, title=\"Cidade\")\n}\n```\n:::\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {
+      "knitr": [
+        "{\"type\":\"list\",\"attributes\":{},\"value\":[]}"
+      ]
+    },
+    "preserve": null,
+    "postProcess": false
+  }
+}

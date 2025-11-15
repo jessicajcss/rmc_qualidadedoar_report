@@ -1,7 +1,16 @@
-.Rproj.user
+# Quarto build
+_book/
+docs/
+*.html
+
+# R
 .Rhistory
+.Rproj.user/
 .RData
 .Ruserdata
 
-/.quarto/
-**/*.quarto_ipynb
+# Cache
+.cache/
+
+# Shiny temp / deployment
+rsconnect/

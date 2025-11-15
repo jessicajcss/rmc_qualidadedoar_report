@@ -1,0 +1,29 @@
+{
+  "index.qmd": {
+    "index.html": "1e02ce21"
+  },
+  "01-dados.qmd": {
+    "01-dados.html": "82b3a4ff"
+  },
+  "02-meteorologia.qmd": {
+    "02-meteorologia.html": "9144419f"
+  },
+  "03-shiny-dashboard.qmd": {
+    "03-shiny-dashboard.html": "0d091f3e"
+  },
+  "04-qualidade-ar.qmd": {
+    "04-qualidade-ar.html": "3787f299"
+  },
+  "05-fontes-meteo.qmd": {
+    "05-fontes-meteo.html": "4c959141"
+  },
+  "06-mapas.qmd": {
+    "06-mapas.html": "15b00342"
+  },
+  "07-estatisticas.qmd": {
+    "07-estatisticas.html": "9c51b05d"
+  },
+  "08-anexos.qmd": {
+    "08-anexos.html": "20a2fced"
+  }
+}
