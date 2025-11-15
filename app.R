@@ -2,11 +2,12 @@
 # Manter exatamente o conteúdo original para consistência:
 # Você pode substituir este bloco pelo código que enviou (já validado).
 # --- INÍCIO ---
+
 # Full rewrite of the Shiny dashboard app (preserves UI layout and behavior)
 # Key fixes: unique input ids, safe binding of sensor data, leaflet palette domain,
 # load data once globally, replace deprecated ggplot size -> linewidth, .groups = "drop"
 #
-# Last updated: 2025-11-09 by assistant
+# Last updated: 2025-11-09 (Last update)
 #
 # Note: test locally. If you deploy to shinyapps.io, confirm fonts and any system packages.
 # -----------------------------------------------------------------------------
@@ -89,6 +90,7 @@ purpleair <- data_purpleair %>%
 
 # THERMO Datafinal: convert units (as in original) and add location
 Datafinal <- air_quality_data %>%
+
   mutate(CO = CO * 1.15,
          O3 = O3 * 1.96,
          NO2 = NO2 * 1.88,
@@ -97,8 +99,7 @@ Datafinal <- air_quality_data %>%
   rename(Date = sample_day) %>%
   left_join(., thermo_localizacao, by = "Cidade") %>%
   mutate(Cidade = factor(Cidade, levels = c("Rio Branco do Sul", "Almirante Tamandaré")),
-         Year = format(Date, "%Y"),
-         Tipo = coalesce(Tipo, "outdoor"))
+         Year = format(Date, "%Y"))
 
 # HOURLY concentration data (ug/m3)
 data <- air_quality_data_ugm3 %>%
@@ -116,22 +117,22 @@ if ("date" %in% names(data)) tz(data$date) <- "America/Sao_Paulo"
 
 # Guarantee a consistent set of column names for binding Datafinal and purpleair
 # We'll create an ordered union of columns and ensure both datasets have them
-all_cols <- union(names(Datafinal), names(purpleair))
+#all_cols <- union(names(Datafinal), names(localizacao_purpleair))
 
 Datafinal_safe <- Datafinal %>%
   mutate(AQI = as.numeric(AQI),
          Latitude = as.numeric(Latitude),
-         Longitude = as.numeric(Longitude)) %>%
-  select(all_of(all_cols))
+         Longitude = as.numeric(Longitude)) # %>%
+# select(all_of(all_cols))
 
 purpleair_safe <- purpleair %>%
   mutate(AQI = as.numeric(AQI),
          Latitude = as.numeric(Latitude),
-         Longitude = as.numeric(Longitude)) %>%
-  select(all_of(all_cols))
+         Longitude = as.numeric(Longitude)) # %>%
+#select(all_of(all_cols))
 
 # Bind sensors safely and drop rows with missing coords
-alldata <- bind_rows(Datafinal_safe, purpleair_safe) %>%
+alldata <- bind_rows(Datafinal, purpleair) %>% #EDITED
   mutate(Latitude = as.numeric(Latitude), Longitude = as.numeric(Longitude)) %>%
   filter(!is.na(Latitude) & !is.na(Longitude))
 
@@ -613,7 +614,7 @@ server <- function(input, output, session) {
     Datafinal <- Datafinal %>% mutate(Date = as.Date(Date, tz = "America/Sao_Paulo"))
 
     week_new <- Datafinal %>%
-      select(Cidade, Date, SO2, NO2, PM2.5 = `PM2.5`, PM10, O3, CO) %>%
+      select(Cidade, Date, SO2, NO2, PM2.5, PM10, O3, CO) %>%
       filter(between(Date, as.Date(input$start_date3), as.Date(input$end_date3)))
 
     week_Cidade <- week_new %>%
@@ -796,5 +797,7 @@ server <- function(input, output, session) {
 
 # Run the application
 shinyApp(ui = ui, server = server)
+
+
 # --- FIM ---
 # Para fins de demonstração, copie o script original dentro deste arquivo.
