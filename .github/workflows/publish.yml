@@ -35,7 +35,9 @@ jobs:
         run: quarto install tinytex
 
       - name: Render Quarto book
-        run: quarto render --no-preview
+        run: |
+          # render sem flags inválidas
+          quarto render
         env:
           RENV_CONFIG_ACTIVE: FALSE
 
