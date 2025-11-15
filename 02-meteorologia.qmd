@@ -6,6 +6,9 @@ title: "Caracterização Meteorológica"
 library(openair)
 library(ggplot2)
 library(scales)
+library(tidyverse)
+source("scripts/load_cached_data.R")
+
 ```
 
 ### Séries horárias

@@ -35,11 +35,11 @@ jobs:
         run: quarto install tinytex
 
       - name: Render Quarto book
-        run: |
-          # render sem flags inválidas
-          quarto render
+        run: quarto render
         env:
           RENV_CONFIG_ACTIVE: FALSE
+          # garante que R leia o .Rprofile do repositório (apenas se necessário)
+          R_PROFILE_USER: ${{ github.workspace }}/.Rprofile
 
       - name: Publish _book to gh-pages
         uses: peaceiris/actions-gh-pages@v4

@@ -6,24 +6,55 @@ execute:
   echo: false
 ---
 
+
 ```{r}
 #| include: false
-# Fonte única de carregamento: garante que os objetos criados fiquem no GlobalEnv
+# Carrega loader (global) e define opções de knitr
 source("scripts/00-load_data.R", local = FALSE)
+source("scripts/load_cached_data.R")
 
-# Opções globais para evitar problemas em CI headless
+# Opções globais compatíveis com CI/headless
 knitr::opts_chunk$set(
   echo = TRUE,
   warning = FALSE,
   message = FALSE,
   dev = "png",
   dev.args = list(type = "cairo"),
-  dpi = 150
+  dpi = 150,
+  include = TRUE,   # importante: não suprimir saídas
+  eval = TRUE       # importante: permitir execução
 )
+```
 
-# Pequena verificação (aparecerá apenas se executar localmente sem hide)
-if (interactive()) {
-  if (exists("purpleair")) message("purpleair OK (linhas: ", nrow(purpleair), ")")
-  if (exists("meteo_hour")) message("meteo_hour OK (linhas: ", nrow(meteo_hour), ")")
+### Diagnóstico: status dos dados carregados
+
+Este chunk executa um resumo de presença/dimensão dos objetos de dados esperados e grava um relatório em _book/debug_data_status.csv e _book/debug_data_status.txt. Se os objetos não existirem, o relatório mostrará quais estão faltando — isso ajuda a identificar se o problema é download/remoto, nome de objeto diferente, ou falha silenciosa.
+
+```{r}
+#| echo: true
+# roda o verificador e mostra a tabela no HTML
+if (file.exists("scripts/check_data.R")) {
+  report <- tryCatch({
+    source("scripts/check_data.R", local = TRUE)
+    # 'report' foi retornado pela fonte
+    if (exists("report")) {
+      report <- get("report")
+    } else {
+      # se o script usou return, pegue o último valor
+      report <- NULL
+    }
+    report
+  }, error = function(e) {
+    tibble::tibble(object = "check_data", present = FALSE, info = paste0("erro: ", e$message))
+  })
+} else {
+  report <- tibble::tibble(object = "check_data.R", present = FALSE, info = "arquivo inexistente")
+}
+
+# Mostra um resumo amigável
+if (!is.null(report)) {
+  knitr::kable(report, caption = "Relatório de disponibilidade de objetos de dados (gerado por scripts/check_data.R)")
+} else {
+  cat("Relatório de diagnóstico não gerado.\n")
 }
 ```

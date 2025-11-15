@@ -23,3 +23,4 @@ if (length(missing_now) > 0) {
   stop("Falha na instalação de pacotes: ", paste(missing_now, collapse = ", "))
 }
 message("Pacotes instalados/verificados com sucesso.")
+

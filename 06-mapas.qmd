@@ -4,14 +4,17 @@ title: "Mapas Interativos"
 
 ```{r}
 library(leaflet)
+
+source("scripts/load_cached_data.R")
 ```
 
 Caso os dados de localização estejam no objeto `localizacao`, geramos mapa interativo dos sensores.
 
 ```{r}
 if (exists("localizacao")) {
-  df_map <- localizacao %>%
-    mutate(popup = paste0("<b>", Local, "</b><br/>Cidade: ", Cidade,
+
+    df_map <- localizacao %>%
+    dplyr::mutate(popup = paste0("<b>", Local, "</b><br/>Cidade: ", Cidade,
                           "<br/>Tipo: ", Tipo))
   pal <- colorFactor(RColorBrewer::brewer.pal(5,"Set2"), df_map$Cidade)
 
@@ -23,6 +26,6 @@ if (exists("localizacao")) {
                      stroke=TRUE, weight=1,
                      fillOpacity=0.8,
                      popup=~popup) %>%
-    addLegend("bottomright", pal=pal, values=~Cidade, title="Cidade")
+    leaflet::addLegend("bottomright", pal=pal, values=~Cidade, title="Cidade")
 }
 ```

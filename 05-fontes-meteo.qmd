@@ -4,17 +4,34 @@ title: "Meteorologia e Potenciais Fontes (Polar / Vento)"
 
 ```{r}
 library(openair)
+
+source("scripts/load_cached_data.R")
+```
+
+```{r}
+# teste rápido: figura base (deve gerar uma imagem PNG embutida)
+plot(1:10, main = "Teste: plot(1:10) - Deve aparecer no HTML")
+# teste ggplot (deve gerar imagem)
+library(ggplot2)
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() + ggtitle("Teste: ggplot mtcars")
+print(p)
+# teste htmlwidget (levemente opcional; se plotly/leaflet instalados)
+if (requireNamespace("htmlwidgets", quietly = TRUE) && requireNamespace("leaflet", quietly = TRUE)) {
+  leaflet::leaflet() %>% leaflet::addTiles() %>% leaflet::setView(-49.3, -25.3, zoom = 10)
+}
 ```
 
 ### Polar plots (exemplo NO2)
 
 ```{r}
+#| label: scatterplot
+
 if (exists("air_quality_data_ugm3") && exists("meteo_hour")) {
   joined <- air_quality_data_ugm3 %>%
-    left_join(meteo_hour %>% select(date, ws, wd, Cidade), by="date")
+    left_join(meteo_hour %>% select(date, ws, wd, Cidade), by=c("Cidade", "date"))
 
   joined %>%
-    filter(Cidade == "Rio Branco do Sul") %>%
+    subset(Cidade == "Rio Branco do Sul") %>%
     openair::polarPlot(pollutant="NO2", ws="ws", wd="wd", main="NO2 vs. vento — RBS")
 }
 ```
@@ -23,11 +40,14 @@ if (exists("air_quality_data_ugm3") && exists("meteo_hour")) {
 
 ```{r}
 if (exists("purpleair") && exists("meteo_hour")) {
+  meteo <- meteo_hour %>% select(date, ws, wd, Cidade)
+  
   pa_join <- purpleair %>%
-    left_join(meteo_hour %>% select(date, ws, wd, Cidade), by=c("Date"="date"))
+    dplyr::left_join(meteo, by=c("Cidade", "Date"="date"))
 
   pa_join %>%
-    openair::pollutionRose(pollutant="PM2.5", type="Cidade", hemisphere="southern",
+    openair::pollutionRose(pollutant="PM2.5", 
+                           type="Cidade", hemisphere="southern",
                            key.footer="PM2.5 (µg/m³)")
 }
 ```

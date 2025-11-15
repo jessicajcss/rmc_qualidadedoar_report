@@ -257,7 +257,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/load_cached_data.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <section id="objetos-carregados" class="level2" data-number="3.1">
@@ -265,10 +266,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/load_cached_data.R"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>character(0)</code></pre>
+<pre><code> [1] "air_quality_data_ugm3" "AQItab"                "Datafinal"            
+ [4] "df_instantaneo"        "f"                     "files"                
+ [7] "localizacao"           "meteo_hour"            "nm"                   
+[10] "obj"                   "Poltab"                "proc_dir"             
+[13] "proj_loader"           "purpleair"            </code></pre>
 </div>
 </div>
 <section id="meteorologia-horária" class="level3" data-number="3.1.1">
@@ -278,6 +285,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"meteo_hour"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(meteo_hour)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 56,082
+Columns: 10
+$ Cidade &lt;chr&gt; "Rio Branco do Sul", "Rio Branco do Sul", "Rio Branco do Sul", …
+$ date   &lt;dttm&gt; 2023-07-11 07:00:00, 2023-07-11 08:00:00, 2023-07-11 09:00:00,…
+$ temp   &lt;dbl&gt; 17.86667, 17.36667, 17.76667, 16.20000, 16.20000, 16.20000, 16.…
+$ ws     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ wd     &lt;dbl&gt; 188.6667, 151.6667, 164.3333, 165.0000, 165.0000, 165.0000, 165…
+$ prec   &lt;dbl&gt; 0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0…
+$ umid   &lt;dbl&gt; 86.00000, 89.83333, 88.33333, 86.00000, 85.50000, 85.00000, 85.…
+$ rad    &lt;dbl&gt; 2809.833, 6671.150, 11304.850, 0.000, 0.000, 0.000, 0.000, 0.00…
+$ press  &lt;dbl&gt; 1020.217, 1019.550, 1019.333, 1022.325, 1022.333, 1022.580, 102…
+$ uv     &lt;dbl&gt; 0.0000000, 0.1666667, 0.1666667, 0.0000000, 0.0000000, 0.000000…</code></pre>
+</div>
 </div>
 </section>
 <section id="qualidade-do-ar-diário-gm-5000" class="level3" data-number="3.1.2">
@@ -285,8 +306,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"Datafinal"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(Datafinal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"Datafinal"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(Datafinal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,495
+Columns: 17
+$ Cidade        &lt;fct&gt; Almirante Tamandaré, Almirante Tamandaré, Almirante Tama…
+$ Date          &lt;date&gt; 2023-08-16, 2023-08-17, 2023-08-18, 2023-08-19, 2023-08…
+$ SO2           &lt;dbl&gt; 75.06737, 208.84238, 194.06122, 181.68172, 190.48055, 16…
+$ NO2           &lt;dbl&gt; 28.14517, 84.71907, 82.59153, 59.72603, 70.30730, 58.853…
+$ PM2.5         &lt;dbl&gt; 5.2086111, 13.6665499, 14.1677083, 3.9767014, 4.3888542,…
+$ PM10          &lt;dbl&gt; 23.133889, 81.132936, 81.460278, 18.335486, 21.405243, 1…
+$ O3            &lt;dbl&gt; NA, 33.78754, 38.34066, 48.55573, 38.59240, 41.85478, 32…
+$ CO            &lt;dbl&gt; NA, 0.85710937, 0.75336979, 0.17920833, 0.48168229, 0.38…
+$ AQI_SO2       &lt;dbl&gt; 41, 103, 99, 93, 97, 85, 110, 89, 87, 105, 26, 65, 43, 2…
+$ AQI_NO2       &lt;dbl&gt; 14, 43, 41, 30, 35, 30, 44, 26, 21, 43, 13, 21, 15, 18, …
+$ AQI_O3        &lt;dbl&gt; NA, 16, 18, 23, 18, 20, 16, 29, 29, 26, 15, 19, 18, 17, …
+$ AQI_CO        &lt;dbl&gt; NA, 8, 7, 2, 5, 4, 7, 2, 3, 5, 0, 0, 1, 1, 1, 3, 6, 4, 4…
+$ AQI_PM25      &lt;dbl&gt; 29, 60, 60, 22, 24, 18, 51, 26, 28, 19, 3, 7, 6, 8, 11, …
+$ AQI_PM10      &lt;dbl&gt; 21, 64, 64, 17, 20, 13, 49, 15, 21, 13, 2, 5, 3, 5, 17, …
+$ AQI           &lt;dbl&gt; 41, 103, 99, 93, 97, 85, 110, 89, 87, 105, 26, 65, 43, 2…
+$ AQI_Qualidade &lt;chr&gt; "Boa", "Ruim para grupos sensíveis", "Moderada", "Modera…
+$ Year          &lt;chr&gt; "2023", "2023", "2023", "2023", "2023", "2023", "2023", …</code></pre>
+</div>
 </div>
 </section>
 <section id="qualidade-do-ar-horário-gm-5000" class="level3" data-number="3.1.3">
@@ -294,8 +336,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"air_quality_data_ugm3"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(air_quality_data_ugm3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"air_quality_data_ugm3"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(air_quality_data_ugm3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 36,848
+Columns: 9
+$ Cidade    &lt;fct&gt; Almirante Tamandaré, Almirante Tamandaré, Almirante Tamandar…
+$ date      &lt;dttm&gt; 2023-08-03 06:00:00, 2023-08-03 07:00:00, 2023-08-03 08:00:…
+$ SO2       &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ NO2       &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ O3        &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ CO        &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ PM2.5     &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ PM10      &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ rh_sensor &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</code></pre>
+</div>
 </div>
 </section>
 <section id="purpleair-pm2.5-diário-corrigido" class="level3" data-number="3.1.4">
@@ -303,8 +358,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"purpleair"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(purpleair)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"purpleair"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(purpleair)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 22,983
+Columns: 8
+Rowwise: Cidade, sample_day
+$ Cidade        &lt;chr&gt; "Almirante Tamandaré", "Almirante Tamandaré", "Almirante…
+$ Tipo          &lt;chr&gt; "outdoor", "outdoor", "outdoor", "outdoor", "outdoor", "…
+$ sensor_id     &lt;chr&gt; "Prefeitura", "Prefeitura", "Prefeitura", "Prefeitura", …
+$ PM2.5         &lt;dbl&gt; 11.837499, 21.958121, 18.158913, 14.643786, 8.278813, 4.…
+$ sample_day    &lt;date&gt; 2023-07-24, 2023-07-25, 2023-07-26, 2023-07-27, 2023-07…
+$ AQI_PM2.5     &lt;dbl&gt; 56, 75, 68, 61, 46, 27, 29, 66, 78, 72, 73, 85, 90, 88, …
+$ AQI_Qualidade &lt;chr&gt; "Moderada", "Moderada", "Moderada", "Moderada", "Boa", "…
+$ Date          &lt;date&gt; 2023-07-24, 2023-07-25, 2023-07-26, 2023-07-27, 2023-07…</code></pre>
+</div>
 </div>
 </section>
 <section id="tabelas-auxiliares-aqi-e-precauções" class="level3" data-number="3.1.5">
@@ -312,9 +380,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"Poltab"</span>)) <span class="fu">head</span>(Poltab)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"AQItab"</span>)) <span class="fu">head</span>(AQItab)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"Poltab"</span>)) <span class="fu">head</span>(Poltab)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Grupos.Sensíveis"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Efeitos.na.saúde"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Precauções"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Poluente"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"Pessoas com problemas respiratórios e cardíacos, idosos e crianças săo os grupos sob maior risco.","2":"Agravamento grave de doença cardíaca ou pulmonar e mortalidade prematura em pessoas com doença cardiopulmonar e idosos. Risco grave de efeitos respiratórios na populaçăo em geral.","3":"Todos devem evitar qualquer esforço ao ar livre. Pessoas com doenças respiratórias ou cardíacas, idosos e crianças devem permanecer em ambientes fechados.","4":"PM2.5","_rn_":"1"},{"1":"Pessoas com problemas respiratórios e cardíacos, idosos e crianças săo os grupos sob maior risco.","2":"Aumento significativo dos sintomas respiratórios e agravamento de doenças pulmonares, como asma. Aumento da probabilidade de efeitos respiratórios na populaçăo em geral","3":"Pessoas com doenças respiratórias, como asma, devem evitar qualquer atividade ao ar livre. Todos os outros, especialmente idosos e crianças, devem limitar o esforço ao ar livre.","4":"PM10","_rn_":"2"},{"1":"Pessoas com asma e outras doenças respiratórias, idosos e crianças săo os grupos sob maior risco.","2":"Efeitos respiratórios graves e respiraçăo prejudicada săo prováveis em crianças ativas, idosos e pessoas com doenças pulmonares, como asma  e efeitos respiratórios cada vez mais graves săo prováveis na populaçăo em geral.","3":"Crianças, idosos e pessoas com doenças pulmonares, como asma, devem permanecer em ambientes fechados. Todos os outros, especialmente crianças, devem evitar esforços ao ar livre.","4":"NO2","_rn_":"3"},{"1":"Pessoas com doenças cardíacas  compreendem o grupo sob maior risco.","2":"Agravamento grave dos sintomas cardiovasculares, como dor no peito, em pessoas com doença cardiovascular, comprometimento de atividades extenuantes na populaçăo em geral.","3":"Pessoas com doenças cardiovasculares, como angina, devem evitar esforços e fontes de CO, como trânsito intenso. Todos os outros devem limitar esforços intensos.","4":"CO","_rn_":"4"},{"1":"Pessoas com asma compreendem o grupo sob maior risco.","2":"Aumento dos sintomas respiratórios, como aperto no peito e chiado em pessoas com asma. Possível agravamento de doença cardíaca ou pulmonar.","3":"Crianças, asmáticos e pessoas com doenças cardíacas ou pulmonares devem limitar os esforços ao ar livre.","4":"SO2","_rn_":"5"},{"1":"Crianças e pessoas com asma săo os grupos sob maior risco.","2":"Sintomas cada vez mais graves e respiraçăo prejudicada săo prováveis em crianças e adultos ativos e pessoas com doenças respiratórias, como asma. Probabilidade crescente de efeitos respiratórios na populaçăo em geral.","3":"Crianças e adultos ativos, e pessoas com doenças respiratórias, como asma, devem evitar qualquer esforço ao ar livre. Todos os outros, especialmente crianças, devem limitar o esforço ao ar livre.","4":"O3","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"AQItab"</span>)) <span class="fu">head</span>(AQItab)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["IQA"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Nível.de.poluição.atmosférica"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Implicações.para.a.saúde"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Declaração.de.advertência"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"0––50","2":"Bom","3":"A qualidade do ar é considerada satisfatória e a poluição atmosférica representa pouco ou nenhum risco","4":"Nenhum","_rn_":"1"},{"1":"51––100","2":"Moderado","3":"A qualidade do ar é aceitável; no entanto, para alguns poluentes, pode haver um problema moderado de saúde para um número muito pequeno de pessoas que são invulgarmente sensíveis à poluição atmosférica.","4":"Crianças e adultos ativos e pessoas com doenças respiratórias, como asma, devem limitar o esforço prolongado ao ar livre.","_rn_":"2"},{"1":"101––150","2":"Não saudável para grupos sensíveis","3":"Membros de grupos sensíveis podem sofrer efeitos na saúde. O público em geral provavelmente não será afetado.","4":"Crianças e adultos ativos e pessoas com doenças respiratórias, como asma, devem limitar o esforço prolongado ao ar livre.","_rn_":"3"},{"1":"151––200","2":"Pouco saudável","3":"Todos podem começar a sentir efeitos na saúde; membros de grupos sensíveis podem sofrer efeitos mais graves para a saúde","4":"Crianças e adultos ativos e pessoas com doenças respiratórias, como asma, devem evitar esforços prolongados ao ar livre; todos os outros, especialmente as crianças, devem limitar o esforço prolongado ao ar livre","_rn_":"4"},{"1":"201––300","2":"Muito prejudicial à saúde","3":"Advertências de saúde sobre condições de emergência. Toda a população tem maior probabilidade de ser afetada.","4":"Crianças e adultos ativos e pessoas com doenças respiratórias, como asma, devem evitar todos os esforços ao ar livre; todos os outros, especialmente as crianças, devem limitar os esforços ao ar livre.","_rn_":"5"},{"1":"300+","2":"Perigoso","3":"Alerta de saúde: todos podem sofrer efeitos mais graves para a saúde","4":"Todos devem evitar todos os esforços ao ar livre","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
 </div>
 </section>
 </section>
@@ -323,7 +408,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"who_limit_all"</span>)) who_limit_all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"who_limit_all"</span>)) who_limit_all</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -800,61 +885,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Dados e Métodos"</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Objetos carregados</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>()</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="fu">### Meteorologia (horária)</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"meteo_hour"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(meteo_hour)</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="fu">### Qualidade do ar — diário (GM-5000)</span></span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"Datafinal"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(Datafinal)</span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="fu">### Qualidade do ar — horário (GM-5000)</span></span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"air_quality_data_ugm3"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(air_quality_data_ugm3)</span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### PurpleAir (PM2.5 diário corrigido)</span></span>
-<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"purpleair"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(purpleair)</span>
-<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tabelas auxiliares (AQI e precauções)</span></span>
-<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"Poltab"</span>)) <span class="fu">head</span>(Poltab)</span>
-<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"AQItab"</span>)) <span class="fu">head</span>(AQItab)</span>
-<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a><span class="fu">## Diretrizes OMS</span></span>
-<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"who_limit_all"</span>)) who_limit_all</span>
-<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a><span class="fu">## Nota sobre horários e TZ</span></span>
-<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>Todas as datas são normalizadas para "America/Sao_Paulo". Manter consistência é essencial para agregações diárias e cálculo de médias móveis (ex.: O3 8h).</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Dados e Métodos"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/load_cached_data.R"</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Objetos carregados</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/load_cached_data.R"</span>)</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>()</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="fu">### Meteorologia (horária)</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"meteo_hour"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(meteo_hour)</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="fu">### Qualidade do ar — diário (GM-5000)</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"Datafinal"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(Datafinal)</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="fu">### Qualidade do ar — horário (GM-5000)</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"air_quality_data_ugm3"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(air_quality_data_ugm3)</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a><span class="fu">### PurpleAir (PM2.5 diário corrigido)</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"purpleair"</span>)) dplyr<span class="sc">::</span><span class="fu">glimpse</span>(purpleair)</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tabelas auxiliares (AQI e precauções)</span></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"Poltab"</span>)) <span class="fu">head</span>(Poltab)</span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"AQItab"</span>)) <span class="fu">head</span>(AQItab)</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a><span class="fu">## Diretrizes OMS</span></span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"who_limit_all"</span>)) who_limit_all</span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a><span class="fu">## Nota sobre horários e TZ</span></span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a>Todas as datas são normalizadas para "America/Sao_Paulo". Manter consistência é essencial para agregações diárias e cálculo de médias móveis (ex.: O3 8h).</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -65,34 +65,21 @@ safe_load_rda_remote(paste0("https://github.com/jessicajcss/ScheduledUpdate/raw/
 safe_load_rda_remote(paste0("https://github.com/jessicajcss/ScheduledUpdate/raw/refs/heads/main/data/data_thermo_instantaneo_ugm3.Rda"))
 
 # Local fallbacks (CSV files) -----------------------------------------------
-# PurpleAir CSV fallback (hourly)
 if (file.exists("data/data_input/data_purpleair_hour.csv")) {
   safe_read_csv_local("data/data_input/data_purpleair_hour.csv", name = "purpleair", date_col = "date")
 }
-
-# Thermo hourly CSV fallback
 if (file.exists("data/data_input/data_thermo_hour.csv")) {
   safe_read_csv_local("data/data_input/data_thermo_hour.csv", name = "thermo_hour", date_col = "localDate")
 }
-
-# Localizacao CSV fallback
 if (file.exists("data/data_input/localizacao.csv")) {
-  # expect columns: Local, Tipo, Cidade, Lat, Long (or similar)
   safe_read_csv_local("data/data_input/localizacao.csv", name = "localizacao")
-}
-
-# If some RDS loaded objects have different internal names, attempt common renames
-# (This is safe: only rename if common alternative names exist)
-if (!exists("localizacao") && exists("localizacao_df")) {
-  assign("localizacao", localizacao_df, envir = .GlobalEnv)
 }
 
 # Harmonizações / criação de objetos esperados --------------------------------
 # METEO
 if (exists("meteo_hour")) {
   try({
-    meteo_hour <- meteo_hour %>%
-      mutate(date = as_datetime(date, tz = "America/Sao_Paulo"))
+    meteo_hour <- meteo_hour %>% mutate(date = as_datetime(date, tz = "America/Sao_Paulo"))
     assign("meteo_hour", meteo_hour, envir = .GlobalEnv)
     message("meteo_hour: linhas = ", nrow(meteo_hour))
   }, silent = TRUE)
@@ -102,7 +89,7 @@ if (exists("meteo_hour")) {
 if (exists("air_quality_data") && !exists("Datafinal")) {
   try({
     Datafinal <- air_quality_data %>%
-      mutate(CO = CO * 1.15,    # ppm -> mg/m3 (as in your script)
+      mutate(CO = CO * 1.15,
              O3 = O3 * 1.96,
              NO2 = NO2 * 1.88,
              SO2 = SO2 * 2.62,
@@ -110,40 +97,30 @@ if (exists("air_quality_data") && !exists("Datafinal")) {
       rename(Date = sample_day) %>%
       mutate(Year = format(Date, "%Y"))
     assign("Datafinal", Datafinal, envir = .GlobalEnv)
-    message("Datafinal (thermo) criado a partir de air_quality_data: linhas = ", nrow(Datafinal))
+    message("Datafinal criado: linhas = ", nrow(Datafinal))
   }, silent = TRUE)
 }
 
 # PurpleAir (from data_purpleair Rda or purpleair CSV) -> ensure object name 'purpleair'
 if (!exists("purpleair") && exists("data_purpleair")) {
   try({
-    purpleair <- data_purpleair %>%
-      mutate(Date = sample_day) %>%
-      select(everything())
+    purpleair <- data_purpleair %>% mutate(Date = sample_day)
     assign("purpleair", purpleair, envir = .GlobalEnv)
-    message("Objeto 'purpleair' criado a partir de data_purpleair")
+    message("purpleair criado a partir de data_purpleair")
   }, silent = TRUE)
 }
-
-# If purpleair exists but column names differ, attempt to harmonize common names
 if (exists("purpleair")) {
   pa <- purpleair
-  # common fixes: ensure PM2.5 column exists and named consistently
-  if (!("PM2.5" %in% names(pa)) && ("PM25" %in% names(pa))) {
-    pa <- pa %>% rename(`PM2.5` = PM25)
-  }
-  if (!("Date" %in% names(pa)) && ("date" %in% names(pa))) {
-    pa <- pa %>% mutate(Date = as_datetime(date, tz = "America/Sao_Paulo"))
-  }
+  if (!("PM2.5" %in% names(pa)) && ("PM25" %in% names(pa))) pa <- pa %>% rename(`PM2.5` = PM25)
+  if (!("Date" %in% names(pa)) && ("date" %in% names(pa))) pa <- pa %>% mutate(Date = as_datetime(date, tz = "America/Sao_Paulo"))
   assign("purpleair", pa, envir = .GlobalEnv)
   message("purpleair harmonizado: colunas = ", paste(names(pa), collapse = ", "))
 }
 
-# Hourly thermo (air_quality_data_ugm3) -> ensure tz and 'date' column
+# Hourly thermo (air_quality_data_ugm3)
 if (exists("air_quality_data_ugm3")) {
   try({
-    air_quality_data_ugm3 <- air_quality_data_ugm3 %>%
-      mutate(date = as_datetime(date, tz = "America/Sao_Paulo"))
+    air_quality_data_ugm3 <- air_quality_data_ugm3 %>% mutate(date = as_datetime(date, tz = "America/Sao_Paulo"))
     assign("air_quality_data_ugm3", air_quality_data_ugm3, envir = .GlobalEnv)
     message("air_quality_data_ugm3 carregado: linhas = ", nrow(air_quality_data_ugm3))
   }, silent = TRUE)
@@ -152,29 +129,91 @@ if (exists("air_quality_data_ugm3")) {
 # Instantaneo thermo (if present)
 if (exists("data_thermo_instantaneo") && !exists("df_instantaneo")) {
   try({
-    # convert to long if needed; keep a simple safe version
-    df_instantaneo <- data_thermo_instantaneo %>%
-      mutate(date = as_datetime(date, tz = "America/Sao_Paulo"))
+    df_instantaneo <- data_thermo_instantaneo %>% mutate(date = as_datetime(date, tz = "America/Sao_Paulo"))
     assign("df_instantaneo", df_instantaneo, envir = .GlobalEnv)
     message("df_instantaneo criado a partir de data_thermo_instantaneo")
   }, silent = TRUE)
 }
 
-# Ensure Poltab/AQItab available -----------------------------------------------
-if (!exists("Poltab") && file.exists("data/data_input/pollutants_table.csv")) {
-  safe_read_csv_local("data/data_input/pollutants_table.csv", name = "Poltab")
+# --- PLACEHOLDERS: criam objetos mínimos se faltarem (evita abortar render) ----
+if (!exists("localizacao")) {
+  localizacao <- tibble::tibble(Local = character(), Tipo = character(), Cidade = character(), Lat = double(), Long = double())
+  assign("localizacao", localizacao, envir = .GlobalEnv)
+  message("Placeholder criado: localizacao")
 }
-if (!exists("AQItab") && file.exists("data/data_input/AQItab.csv")) {
-  safe_read_csv_local("data/data_input/AQItab.csv", name = "AQItab")
+if (!exists("Poltab")) {
+  Poltab <- tibble::tibble(Poluente = character(), Limite = numeric(), Info = character())
+  assign("Poltab", Poltab, envir = .GlobalEnv)
+  message("Placeholder criado: Poltab")
+}
+if (!exists("AQItab")) {
+  AQItab <- tibble::tibble(Category = character(), Min = numeric(), Max = numeric(), Color = character())
+  assign("AQItab", AQItab, envir = .GlobalEnv)
+  message("Placeholder criado: AQItab")
+}
+if (!exists("meteo_hour")) {
+  meteo_hour <- tibble::tibble(
+    date = seq(as.POSIXct(Sys.Date()-7), as.POSIXct(Sys.Date()), by = "1 hour"),
+    Cidade = "Rio Branco do Sul",
+    ws = NA_real_, wd = NA_real_, temp = NA_real_, umid = NA_real_, prec = 0, press = NA_real_, rad = NA_real_, uv = NA_real_
+  )
+  assign("meteo_hour", meteo_hour, envir = .GlobalEnv)
+  message("Placeholder criado: meteo_hour")
+}
+if (!exists("air_quality_data_ugm3")) {
+  air_quality_data_ugm3 <- tibble::tibble(
+    date = seq(as.POSIXct(Sys.Date()-7), as.POSIXct(Sys.Date()), by = "1 hour"),
+    Cidade = rep("Rio Branco do Sul", length.out = 24*8 + 1),
+    SO2 = NA_real_, NO2 = NA_real_, O3 = NA_real_, CO = NA_real_, PM10 = NA_real_, `PM2.5` = NA_real_
+  )
+  assign("air_quality_data_ugm3", air_quality_data_ugm3, envir = .GlobalEnv)
+  message("Placeholder criado: air_quality_data_ugm3")
+}
+if (!exists("Datafinal")) {
+  Datafinal <- tibble::tibble(Date = seq.Date(Sys.Date()-30, Sys.Date(), by = "day"),
+                              Cidade = "Rio Branco do Sul",
+                              SO2 = NA_real_, NO2 = NA_real_, O3 = NA_real_, CO = NA_real_, PM10 = NA_real_, `PM2.5` = NA_real_)
+  assign("Datafinal", Datafinal, envir = .GlobalEnv)
+  message("Placeholder criado: Datafinal")
+}
+if (!exists("purpleair")) {
+  purpleair <- tibble::tibble(Date = as.Date(Sys.Date()), Cidade = "Rio Branco do Sul", sensor_id = "placeholder", `PM2.5` = NA_real_, humidity = NA_real_, tempC = NA_real_)
+  assign("purpleair", purpleair, envir = .GlobalEnv)
+  message("Placeholder criado: purpleair")
+}
+if (!exists("df_instantaneo")) {
+  df_instantaneo <- tibble::tibble(date = seq(as.POSIXct(Sys.Date()-1), as.POSIXct(Sys.Date()), by = "hour"),
+                                   Cidade = "Rio Branco do Sul",
+                                   Poluente = NA_character_,
+                                   `Concentração (ug/m³)` = NA_real_)
+  assign("df_instantaneo", df_instantaneo, envir = .GlobalEnv)
+  message("Placeholder criado: df_instantaneo")
 }
 
-# Final checks & summary -----------------------------------------------------
-objs_expected <- c(
+# Persist: salvar objetos-chave em data/processed para que capítulos (sessões separadas) possam ler
+proc_dir <- file.path("data", "processed")
+dir.create(proc_dir, recursive = TRUE, showWarnings = FALSE)
+
+objs_to_save <- c(
   "localizacao", "Poltab", "AQItab",
   "meteo_hour", "Datafinal", "air_quality_data_ugm3",
   "purpleair", "df_instantaneo"
 )
 
+for (obj in objs_to_save) {
+  if (exists(obj, envir = .GlobalEnv)) {
+    safe_path <- file.path(proc_dir, paste0(obj, ".rds"))
+    tryCatch({
+      saveRDS(get(obj, envir = .GlobalEnv), file = safe_path)
+      message("Salvo cache RDS: ", safe_path)
+    }, error = function(e) {
+      message("Falha ao salvar RDS para ", obj, ": ", e$message)
+    })
+  }
+}
+
+# Final checks & summary -----------------------------------------------------
+objs_expected <- objs_to_save
 present <- objs_expected[objs_expected %in% ls(envir = .GlobalEnv)]
 missing <- setdiff(objs_expected, present)
 
@@ -183,14 +222,5 @@ if (length(missing) > 0) {
   message("Objetos faltantes (considere prover localmente em data/ ou verificar downloads remotos): ", paste(missing, collapse = ", "))
 }
 
-# Small convenience: create safe lightweight versions for plotting if full objects missing
-if (!exists("purpleair") && exists("data_purpleair")) {
-  try({
-    purpleair <- data_purpleair %>% mutate(Date = sample_day)
-    assign("purpleair", purpleair, envir = .GlobalEnv)
-    message("Fallback: purpleair criado (segunda tentativa).")
-  }, silent = TRUE)
-}
-
-# End of file
 message("scripts/00-load_data.R finalizado.")
+

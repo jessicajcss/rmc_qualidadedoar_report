@@ -5,6 +5,8 @@ title: "Estatísticas Resumidas"
 ```{r}
 library(openair)
 library(DT)
+source("scripts/load_cached_data.R")
+
 ```
 
 ### aqStats (GM-5000)
@@ -19,12 +21,4 @@ if (exists("air_quality_data_ugm3")) {
 
 ### aqStats (PurpleAir PM2.5)
 
-```{r}
-if (exists("purpleair")) {
-  stats_pa <- purpleair %>%
-    select(Cidade, Date, PM2.5) %>%
-    rename(date = Date) %>%
-    aqStats(type="Cidade", pollutant="PM2.5")
-  DT::datatable(stats_pa)
-}
-```
+

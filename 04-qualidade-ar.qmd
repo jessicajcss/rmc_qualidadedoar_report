@@ -8,6 +8,8 @@ library(ggplot2)
 library(lubridate)
 library(ggh4x)
 library(reshape2)
+source("scripts/load_cached_data.R")
+
 ```
 
 ### Padrão hora × dia da semana (GM-5000 horário)
@@ -16,14 +18,14 @@ library(reshape2)
 if (exists("air_quality_data_ugm3")) {
   gm_hour <- air_quality_data_ugm3 %>%
     mutate(hr = hour(date),
-           wday = wday(date, label = TRUE)) %>%
-    pivot_longer(-c(Cidade,date,hr,wday), names_to="Poluente", values_to="Valor") %>%
+           wday = lubridate::wday(date, label = TRUE)) %>%
+    tidyr::pivot_longer(-c(Cidade,date,hr,wday), names_to="Poluente", values_to="Valor") %>%
     group_by(Cidade, Poluente, wday, hr) %>%
     summarise(Media = mean(Valor, na.rm=TRUE), .groups="drop")
 
   ggplot(gm_hour, aes(hr, Media, colour=wday)) +
     geom_line(linewidth=0.4) +
-    facet_nested(Poluente ~ Cidade, scales="free_y") +
+    ggh4x::facet_nested(Poluente ~ Cidade, scales="free_y") +
     scale_x_continuous(breaks=seq(0,24,4)) +
     theme_classic() +
     labs(x="Hora", y="Média horária", colour="Dia", title="Padrões hora × dia da semana (GM-5000)")
@@ -36,13 +38,13 @@ if (exists("air_quality_data_ugm3")) {
 if (exists("purpleair")) {
   pa_hour <- purpleair %>%
     mutate(hr = hour(Date),
-           wday = wday(Date, label = TRUE)) %>%
+           wday = lubridate::wday(Date, label = TRUE)) %>%
     group_by(Cidade, sensor_id, wday, hr) %>%
     summarise(PM25 = mean(PM2.5, na.rm=TRUE), .groups="drop")
 
   ggplot(pa_hour, aes(hr, PM25, colour=wday)) +
     geom_line(linewidth=0.4) +
-    facet_nested(. ~ Cidade + sensor_id, scales="free_y") +
+    ggh4x::facet_nested(. ~ Cidade + sensor_id, scales="free_y") +
     scale_x_continuous(breaks=seq(0,24,4)) +
     theme_classic() +
     labs(x="Hora", y="PM2.5 (µg/m³)", colour="Dia", title="Padrões hora × dia da semana (PurpleAir)")
@@ -55,7 +57,7 @@ if (exists("purpleair")) {
 if (exists("Datafinal")) {
   df_day <- Datafinal %>%
     select(Cidade, Date, SO2, NO2, PM2.5, PM10, O3, CO) %>%
-    pivot_longer(-c(Cidade, Date), names_to="Poluente", values_to="Valor")
+    tidyr::pivot_longer(-c(Cidade, Date), names_to="Poluente", values_to="Valor")
 
   df_mean <- df_day %>%
     group_by(Cidade, Poluente) %>%
