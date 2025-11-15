@@ -1,0 +1,29 @@
+---
+title: "00 - Setup (carregamento de dados e opções)"
+format: html
+execute:
+  enabled: true
+  echo: false
+---
+
+```{r}
+#| include: false
+# Fonte única de carregamento: garante que os objetos criados fiquem no GlobalEnv
+source("scripts/00-load_data.R", local = FALSE)
+
+# Opções globais para evitar problemas em CI headless
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  dev = "png",
+  dev.args = list(type = "cairo"),
+  dpi = 150
+)
+
+# Pequena verificação (aparecerá apenas se executar localmente sem hide)
+if (interactive()) {
+  if (exists("purpleair")) message("purpleair OK (linhas: ", nrow(purpleair), ")")
+  if (exists("meteo_hour")) message("meteo_hour OK (linhas: ", nrow(meteo_hour), ")")
+}
+```

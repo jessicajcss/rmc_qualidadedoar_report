@@ -10,6 +10,7 @@ book:
   date: "`r Sys.Date()`"
   language: pt
   chapters:
+    - 00-setup.qmd
     - index.qmd
     - 01-dados.qmd
     - 02-meteorologia.qmd
@@ -21,7 +22,7 @@ book:
     - 08-anexos.qmd
 
 website:
-  site-url: https://jessicajcss.github.io/rmc-qualidade-ar-relatorio/
+  site-url: https://jessicajcss.github.io/rmc_qualidadedoar_report/
   favicon: assets/favicon.png
 
 format:
@@ -37,7 +38,6 @@ format:
     df-print: paged
 
 execute:
-  # garante que os chunks sejam avaliados durante render
   enabled: true
   freeze: false
   cache: true
