@@ -21,6 +21,8 @@ jobs:
           use-public-rspm: true
       - name: Install R packages
         run: Rscript scripts/install_packages.R
+      - name: Install Quarto
+        run: quarto install tinytex
       - name: Render
         run: quarto render
       - name: Publish to GitHub Pages
