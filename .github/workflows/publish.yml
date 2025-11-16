@@ -25,11 +25,11 @@ jobs:
             libcairo2-dev libpango1.0-dev libpng-dev \
             fonts-dejavu-core libgomp1
 
-      - name: Install Quarto
-        run: quarto install tinytex
-
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Install Quarto
+        run: quarto install tinytex
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
