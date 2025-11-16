@@ -1,3 +1,4 @@
+# Improved workflow with R package caching and pak-based install
 name: Build and Publish Quarto Book
 
 on:
@@ -10,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    timeout-minutes: 120
 
     steps:
       - name: Checkout repository
@@ -18,7 +20,13 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev fonts-dejavu-core
+          sudo apt-get install -y \
+            libcurl4-openssl-dev libssl-dev libxml2-dev \
+            libcairo2-dev libpango1.0-dev libpng-dev \
+            fonts-dejavu-core libgomp1
+
+      - name: Install Quarto
+        run: quarto install tinytex
 
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
@@ -28,13 +36,38 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Install R packages (project)
+      - name: Configure R library path
+        run: |
+          echo "R_LIBS_USER=${RUNNER_TEMP}/Rlibs" >> $GITHUB_ENV
+          mkdir -p "${RUNNER_TEMP}/Rlibs"
+        shell: bash
+
+      - name: Restore R library cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: r-lib-${{ runner.os }}-${{ hashFiles('scripts/install_packages.R') }}
+          restore-keys: |
+            r-lib-${{ runner.os }}-
+
+      - name: Install R packages (fast with pak)
+        # uses pak; requires scripts/install_packages.R to use pak::pkg_install()
         run: Rscript scripts/install_packages.R
+        env:
+          R_LIBS_USER: ${{ env.R_LIBS_USER }}
+
+      - name: Save R library cache
+        if: success()
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: r-lib-${{ runner.os }}-${{ hashFiles('scripts/install_packages.R') }}
 
       - name: Render Quarto book
-        run: quarto render --no-preview
+        run: quarto render
         env:
           RENV_CONFIG_ACTIVE: FALSE
+          R_PROFILE_USER: ${{ github.workspace }}/.Rprofile
 
       - name: Publish _book to gh-pages
         uses: peaceiris/actions-gh-pages@v4
