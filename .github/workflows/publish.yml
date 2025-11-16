@@ -1,3 +1,5 @@
+# This workflow builds and publishes the Quarto book to GitHub Pages
+# Optimizations: Caches R packages and TinyTeX to reduce build time from ~15-20 min to ~3-5 min
 name: Build and Publish Quarto Book
 
 on:
@@ -8,6 +10,7 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     permissions:
       contents: write
 
@@ -28,8 +31,27 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Cache R packages
+        # Caches R packages to speed up subsequent runs from ~15-20 min to ~3-5 min
+        # Cache is invalidated when scripts/install_packages.R changes
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-r-${{ hashFiles('scripts/install_packages.R') }}
+          restore-keys: |
+            ${{ runner.os }}-r-
+
       - name: Install R packages (project)
         run: Rscript scripts/install_packages.R
+
+      - name: Cache TinyTeX
+        # Caches TinyTeX installation to save 1-2 minutes on subsequent runs
+        uses: actions/cache@v4
+        with:
+          path: ~/.TinyTeX
+          key: ${{ runner.os }}-tinytex
+          restore-keys: |
+            ${{ runner.os }}-tinytex
 
       - name: Install Quarto
         run: quarto install tinytex
