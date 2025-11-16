@@ -1,7 +1,4 @@
-# Instala apenas pacotes faltantes usando pak (usa RSPM binários quando disponíveis)
-# R_LIBS_USER deve ser configurado no runner (env var)
-
-# Lista de pacotes do seu projeto (ajuste se quiser reduzir)
+# Instala (ou verifica) pacotes R usados no relatório e no app Shiny
 pkgs <- c(
   "tidyverse","lubridate","openair","openairmaps","reshape2","zoo","janitor",
   "ggplot2","ggh4x","patchwork","DT","leaflet","leaflegend","plotly",
@@ -10,26 +7,20 @@ pkgs <- c(
   "scales","ggtext","ggdist","MetBrewer","Hmisc"
 )
 
-# Ensure pak is available
-if (!requireNamespace("pak", quietly = TRUE)) {
-  install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
-}
+repos <- getOption("repos")
+if (is.null(repos) || repos["CRAN"] == "@CRAN@") options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-# Compute which packages are missing
-installed <- installed.packages(lib.loc = .libPaths())[ , "Package"]
-to_install <- setdiff(pkgs, installed)
-
-if (length(to_install) == 0) {
-  message("Todos os pacotes já instalados.")
+to_install <- pkgs[!pkgs %in% installed.packages()[, "Package"]]
+if (length(to_install) > 0) {
+  install.packages(to_install, dependencies = TRUE)
 } else {
-  message("Instalando pacotes faltantes: ", paste(to_install, collapse = ", "))
-  # pak::pkg_install irá preferir binários via RSPM (quando available)
-  pak::pkg_install(to_install)
+  message("Todos os pacotes já instalados.")
 }
 
-# Verify
-not_installed <- setdiff(pkgs, installed.packages(lib.loc = .libPaths())[ , "Package"])
-if (length(not_installed) > 0) {
-  stop("Falha na instalação de pacotes: ", paste(not_installed, collapse = ", "))
+# Small check
+missing_now <- pkgs[!pkgs %in% installed.packages()[, "Package"]]
+if (length(missing_now) > 0) {
+  stop("Falha na instalação de pacotes: ", paste(missing_now, collapse = ", "))
 }
 message("Pacotes instalados/verificados com sucesso.")
+
