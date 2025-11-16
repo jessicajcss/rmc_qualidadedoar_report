@@ -43,6 +43,23 @@ quarto render
 ```
 3. Publicação automática via Actions (branch gh-pages).
 
+## GitHub Actions
+
+O workflow de publicação (`.github/workflows/publish.yml`) foi otimizado com caching:
+
+- **Primeira execução**: ~15-20 minutos (construindo cache)
+- **Execuções subsequentes**: ~3-5 minutos (usando cache)
+
+### O que é cacheado?
+
+- Pacotes R instalados (~29 pacotes)
+- TinyTeX (LaTeX para PDFs)
+
+### Quando o cache é invalidado?
+
+- Quando `scripts/install_packages.R` é modificado
+- Cache automático do GitHub (7 dias sem uso)
+
 ## Dados
 
 - Carregados de:  
