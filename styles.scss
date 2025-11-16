@@ -1,16 +1,96 @@
+/* Design inspirado no ALA cleaning_data */
 :root {
   --accent: #0b4f6c;
+  --accent-2: #0ea5a4;
+  --muted: #6b7280;
+  --bg: #ffffff;
+  --card-bg: #fbfdff;
+  --max-width: 1120px;
+  --sidebar-width: 320px;
+  --hero-height: 320px;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
 }
 
-h1, h2, h3 {
+/* base */
+body.quarto-light {
+  font-family: var(--font-sans);
+  color: #0f172a;
+  background: var(--bg);
+}
+
+/* container */
+.quarto-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 18px;
+}
+
+/* HERO */
+.site-hero {
+  background: linear-gradient(180deg, rgba(11,79,108,0.06), rgba(14,165,164,0.02));
+  border-radius: 12px;
+  padding: 36px;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 28px;
+}
+.site-hero .hero-title {
+  font-size: 2.2rem;
+  line-height: 1.05;
+  margin: 0 0 10px;
   color: var(--accent);
-  font-weight: 600;
+  font-weight: 700;
+}
+.site-hero .hero-sub {
+  color: var(--muted);
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+.site-hero .hero-cta a.btn {
+  margin-right: 10px;
 }
 
-code {
-  font-size: 0.85rem;
+/* HERO image */
+.site-hero img.hero-logo {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(10, 15, 30, 0.04);
 }
 
-.table {
-  font-size: 0.9rem;
+/* cards grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
 }
+.card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid rgba(15,23,42,0.04);
+  box-shadow: 0 8px 20px rgba(10,15,30,0.03);
+}
+.card h3 { margin: 0 0 6px 0; font-size: 1.05rem; color: #081827; }
+.card p { margin: 0; color: var(--muted); }
+
+/* sidebar adjustments */
+.sidebar { background: #fff; border-right: 1px solid rgba(0,0,0,0.03); }
+
+/* code blocks */
+.sourceCode { border-radius: 8px; }
+
+/* responsive */
+@media (max-width: 900px) {
+  .site-hero { grid-template-columns: 1fr; text-align: left; }
+  .site-hero img.hero-logo { margin-top: 12px; }
+  .quarto-container { padding: 0 16px; }
+  .sidebar { display: none; }
+}
+
+/* links & small tweaks */
+a { color: var(--accent); }
+a:hover { color: var(--accent-2); }

@@ -5,7 +5,7 @@ title: "Mapas Interativos"
 ```{r}
 library(leaflet)
 
-source("scripts/load_cached_data.R")
+#source("scripts/load_cached_data.R")
 ```
 
 Caso os dados de localização estejam no objeto `localizacao`, geramos mapa interativo dos sensores.

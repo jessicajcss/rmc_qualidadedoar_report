@@ -5,7 +5,7 @@ title: "Estatísticas Resumidas"
 ```{r}
 library(openair)
 library(DT)
-source("scripts/load_cached_data.R")
+#source("scripts/load_cached_data.R")
 
 ```
 

@@ -1,40 +1,27 @@
 ---
 title: "Visão Geral"
-editor: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r}
 #| include: false
-# Carrega dados e cria objetos no ambiente global para todo o livro
-# usar local = FALSE garante que as variáveis fiquem no .GlobalEnv
-source("scripts/00-load_data.R", local = FALSE)
-# Ajustes globais de knitr (dispositivo gráfico compatível com CI)
-knitr::opts_chunk$set(
-  echo = TRUE,
-  message = FALSE,
-  warning = FALSE,
-  dev = "png",
-  dev.args = list(type = "cairo")
-)
+source("scripts/00-load_data.R")
 ```
 
-Este relatório apresenta a caracterização da qualidade do ar e
-meteorologia em municípios selecionados da Região Metropolitana de
-Curitiba (RMC), com base em:
+Este relatório apresenta a caracterização da qualidade do ar e meteorologia em municípios selecionados da Região Metropolitana de Curitiba (RMC), com base em:
 
--   Sensores GM-5000 (gases + PM)
--   Sensores PurpleAir (PM2.5)
--   Dados meteorológicos (vento, temperatura, umidade, precipitação,
-    pressão, radiação)
--   Cálculo e representação de AQI / diretrizes da OMS
+- Sensores GM-5000 (gases + PM)
+- Sensores PurpleAir (PM2.5)
+- Dados meteorológicos (vento, temperatura, umidade, precipitação, pressão, radiação)
+- Cálculo e representação de AQI / diretrizes da OMS
 
-Conteúdos principais: 1. Fontes e estrutura dos dados 2. Séries e
-climatologia meteorológica 3. Integração com dashboard Shiny 4. Padrões
-temporais hora × dia da semana 5. Influência meteorológica (polar plots
-/ rosas) 6. Mapas de sensores e concentrações médias 7. Estatísticas
-resumidas (`aqStats`) 8. Anexos (sessão, tabelas WHO / AQI)
+Conteúdos principais:
+1. Fontes e estrutura dos dados
+2. Séries e climatologia meteorológica
+3. Integração com dashboard Shiny
+4. Padrões temporais hora × dia da semana
+5. Influência meteorológica (polar plots / rosas)
+6. Mapas de sensores e concentrações médias
+7. Estatísticas resumidas (`aqStats`)
+8. Anexos (sessão, tabelas WHO / AQI)
 
-O dashboard interativo está disponível também como capítulo (iframe)
-e/ou separado via shinyapps.io.
+O dashboard interativo está disponível também como capítulo (iframe) e/ou separado via shinyapps.io.

@@ -1,5 +1,5 @@
 ---
-title: "00 - Setup (carregamento de dados e opções)"
+title: "Setup (carregamento de dados e opções)"
 format: html
 execute:
   enabled: true
@@ -11,7 +11,7 @@ execute:
 #| include: false
 # Carrega loader (global) e define opções de knitr
 source("scripts/00-load_data.R", local = FALSE)
-source("scripts/load_cached_data.R")
+#source("scripts/load_cached_data.R")
 
 # Opções globais compatíveis com CI/headless
 knitr::opts_chunk$set(

@@ -4,8 +4,8 @@ title: "Meteorologia e Potenciais Fontes (Polar / Vento)"
 
 ```{r}
 library(openair)
-
-source("scripts/load_cached_data.R")
+library(tidyverse)
+#source("scripts/load_cached_data.R")
 ```
 
 ```{r}

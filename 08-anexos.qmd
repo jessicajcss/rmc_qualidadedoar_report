@@ -4,7 +4,7 @@ title: "Anexos"
 
 ```{r}
 
-source("scripts/load_cached_data.R")
+#source("scripts/load_cached_data.R")
 
 ```
 

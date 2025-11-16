@@ -1,14 +1,38 @@
 project:
   type: book
-
-# Pasta de saída (HTML final) gerada pelo quarto render
-output-dir: _book
+  output-dir: _book
+  resources:
+    - "*.png"
+    - "*.jpeg"
+    - "*.jfif"
+    - "*.svg"
 
 book:
   title: "Relatório Técnico Interativo — Qualidade do Ar (RMC)"
-  author: ["Equipe Qualidade do Ar RMC"]
-  date: "`r Sys.Date()`"
-  language: pt
+  subtitle: "Relatório técnico e dashboard — RMC"
+  favicon: assets/favicon.png
+  reader-mode: true
+  page-navigation: true
+  back-to-top-navigation: true
+  search: true
+  site-url: "https://jessicajcss.github.io/rmc_qualidadedoar_report/"
+  repo-url: "https://github.com/jessicajcss/rmc_qualidadedoar_report"
+  image: assets/logo-hero.png
+  image-alt: "Relatório RMC"
+  sidebar:
+    logo: assets/labair.png
+
+  page-footer:
+    border: true
+    left: |
+      Relatório Técnico — Qualidade do Ar (RMC)
+    center: |
+      <!-- center footer (optional) -->
+    right: |
+      This book was built with <a href="https://quarto.org/">Quarto</a>.
+
+  cover-image: assets/logo-hero.png
+
   chapters:
     - 00-setup.qmd
     - index.qmd
@@ -21,32 +45,42 @@ book:
     - 07-estatisticas.qmd
     - 08-anexos.qmd
 
-website:
-  site-url: https://jessicajcss.github.io/rmc_qualidadedoar_report/
-  favicon: assets/favicon.png
+bibliography:
+  - references.bib
 
 format:
   html:
+    mainfont: Roboto
+    monofont: Fira Code
+    highlight-style: arrow
+    monobackgroundcolor: "#F7F7F7"
+    include-in-header: includes/header.html
+    include-before-body-end: includes/footer.html
     theme:
-      light: cosmo
-    number-sections: true
+      - theme.css
+      - theme.scss
+      - lumen
+    # layout choices — use values accepted by Quarto
+    page-layout: full       # valid: article | full | custom
     toc: true
+    toc-location: right      # valid: body | left | right | left-body | right-body
     toc-depth: 3
-    code-fold: show
+    number-sections: true
     code-tools: true
-    css: styles.scss
-    df-print: paged
+    sidebar:
+      style: floating
+      width: 320px
 
 execute:
-  enabled: true
-  freeze: false
-  cache: true
+  code-annotations: hover
+  number-depth: 3
+  echo: true
 
 knitr:
   opts_chunk:
     echo: true
-    message: false
     warning: false
+    message: false
     fig.width: 9
     fig.asp: 0.55
     fig.align: center

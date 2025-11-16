@@ -67,6 +67,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <link href="./07-estatisticas.html" rel="next">
 <link href="./05-fontes-meteo.html" rel="prev">
+<link href="./assets/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -77,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-70a47bd5681a7291082a5b9f83d58762.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5f2055cda669fb4584fdde471100b5f9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -105,6 +106,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+</head><body class="nav-sidebar floating quarto-light">```html
+
+<!-- Header includes: fonts, meta, preconnect -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;family=Source+Serif+4:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet">
+
+
+
+<meta name="theme-color" content="#0b4f6c">
+
+<style>
+
+  /* small helper to remove default top margin introduced by some themes */
+
+  body { margin-top: 0; }
+
+</style>
+
+```
+
 <link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
 
 <script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
@@ -125,16 +152,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <script src="site_libs/leaflet-binding-2.2.3/leaflet.js"></script>
 
-<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
 
 
-<link rel="stylesheet" href="styles.scss">
-</head>
 
-<body class="nav-sidebar floating quarto-light">
+
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -153,12 +175,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./assets/labair.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./assets/labair.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Relatório Técnico Interativo — Qualidade do Ar (RMC)</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/jessicajcss/rmc_qualidadedoar_report" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -171,7 +205,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./00-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">00 - Setup (carregamento de dados e opções)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setup (carregamento de dados e opções)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -237,16 +271,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-right" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Mapas Interativos</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Mapas Interativos</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-right">
 
     
   
@@ -259,17 +293,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="cell" data-layout-align="center">
-<details open="" class="code-fold">
-<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/load_cached_data.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#source("scripts/load_cached_data.R")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Caso os dados de localização estejam no objeto <code>localizacao</code>, geramos mapa interativo dos sensores.</p>
 <div class="cell" data-layout-align="center">
-<details open="" class="code-fold">
-<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"localizacao"</span>)) {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    df_map <span class="ot">&lt;-</span> localizacao <span class="sc">%&gt;%</span></span>
@@ -287,10 +316,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                     <span class="at">popup=</span><span class="sc">~</span>popup) <span class="sc">%&gt;%</span></span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    leaflet<span class="sc">::</span><span class="fu">addLegend</span>(<span class="st">"bottomright"</span>, <span class="at">pal=</span>pal, <span class="at">values=</span><span class="sc">~</span>Cidade, <span class="at">title=</span><span class="st">"Cidade"</span>)</span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-ca46707cca1af080f94f" style="width:100%;height:357px;"></div>
-<script type="application/json" data-for="htmlwidget-ca46707cca1af080f94f">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[-25.1871817,-25.3824,-25.3133706,-25.18696561,-25.1912618,-25.44685749,-25.1914746,-25.3370694,-25.2248008,-25.19397868,-25.45460632,-25.179019,-25.219944,-25.19397868,-25.4767122,-25.32228906,-25.213083,-25.244972,-25.20547366],[-49.4528,-49.56748,-49.2995381,-49.31336251,-49.3214659,-49.52709758,-49.3214283,-49.2647767,-49.3541583,-49.31179312,-49.5186162,-49.315144,-49.356556,-49.31179312,-49.5310958,-49.15776772,-49.334556,-49.393944,-49.32463278],6,null,null,{"interactive":true,"className":"","stroke":true,"color":["#A6D854","#FC8D62","#66C2A5","#A6D854","#A6D854","#FC8D62","#A6D854","#66C2A5","#E78AC3","#A6D854","#FC8D62","#A6D854","#E78AC3","#A6D854","#FC8D62","#8DA0CB","#E78AC3","#E78AC3","#A6D854"],"weight":1,"opacity":0.5,"fill":true,"fillColor":["#A6D854","#FC8D62","#66C2A5","#A6D854","#A6D854","#FC8D62","#A6D854","#66C2A5","#E78AC3","#A6D854","#FC8D62","#A6D854","#E78AC3","#A6D854","#FC8D62","#8DA0CB","#E78AC3","#E78AC3","#A6D854"],"fillOpacity":0.8},null,null,["<b>Dona Suzana<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: outdoor","<b>Escola Hans<\/b><br/>Cidade: Campo Largo<br/>Tipo: outdoor","<b>Prefeitura<\/b><br/>Cidade: Almirante Tamandaré<br/>Tipo: outdoor","<b>Dona Suzana<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: indoor","<b>Dona Eliete<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: outdoor","<b>Escola Madalena<\/b><br/>Cidade: Campo Largo<br/>Tipo: outdoor","<b>Dona Eliete<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: indoor","<b>Escola Cândido<\/b><br/>Cidade: Almirante Tamandaré<br/>Tipo: outdoor","<b>Prefeitura<\/b><br/>Cidade: Itaperuçú<br/>Tipo: outdoor","<b>Defesa Civil<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: indoor","<b>SME<\/b><br/>Cidade: Campo Largo<br/>Tipo: outdoor","<b>Escola Hilda<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: outdoor","<b>Escola Cândidos<\/b><br/>Cidade: Itaperuçú<br/>Tipo: outdoor","<b>Defesa Civil<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: outdoor","<b>SMMA<\/b><br/>Cidade: Campo Largo<br/>Tipo: outdoor","<b>Embrapa<\/b><br/>Cidade: Colombo<br/>Tipo: outdoor","<b>João Apolinário<\/b><br/>Cidade: Itaperuçú<br/>Tipo: outdoor","<b>Pombas<\/b><br/>Cidade: Itaperuçú<br/>Tipo: outdoor","<b>Colégio José Ermírio<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: outdoor"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLegend","args":[{"colors":["#66C2A5","#FC8D62","#8DA0CB","#E78AC3","#A6D854"],"labels":["Almirante Tamandaré","Campo Largo","Colombo","Itaperuçú","Rio Branco do Sul"],"na_color":null,"na_label":"NA","opacity":0.5,"position":"bottomright","type":"factor","title":"Cidade","extra":null,"layerId":null,"className":"info legend","group":null}]}],"limits":{"lat":[-25.4767122,-25.179019],"lng":[-49.56748,-49.15776772]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-a5646d7dd19691095f39" style="width:100%;height:357px;"></div>
+<script type="application/json" data-for="htmlwidget-a5646d7dd19691095f39">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[-25.1871817,-25.3824,-25.3133706,-25.18696561,-25.1912618,-25.44685749,-25.1914746,-25.3370694,-25.2248008,-25.19397868,-25.45460632,-25.179019,-25.219944,-25.19397868,-25.4767122,-25.32228906,-25.213083,-25.244972,-25.20547366],[-49.4528,-49.56748,-49.2995381,-49.31336251,-49.3214659,-49.52709758,-49.3214283,-49.2647767,-49.3541583,-49.31179312,-49.5186162,-49.315144,-49.356556,-49.31179312,-49.5310958,-49.15776772,-49.334556,-49.393944,-49.32463278],6,null,null,{"interactive":true,"className":"","stroke":true,"color":["#A6D854","#FC8D62","#66C2A5","#A6D854","#A6D854","#FC8D62","#A6D854","#66C2A5","#E78AC3","#A6D854","#FC8D62","#A6D854","#E78AC3","#A6D854","#FC8D62","#8DA0CB","#E78AC3","#E78AC3","#A6D854"],"weight":1,"opacity":0.5,"fill":true,"fillColor":["#A6D854","#FC8D62","#66C2A5","#A6D854","#A6D854","#FC8D62","#A6D854","#66C2A5","#E78AC3","#A6D854","#FC8D62","#A6D854","#E78AC3","#A6D854","#FC8D62","#8DA0CB","#E78AC3","#E78AC3","#A6D854"],"fillOpacity":0.8},null,null,["<b>Dona Suzana<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: outdoor","<b>Escola Hans<\/b><br/>Cidade: Campo Largo<br/>Tipo: outdoor","<b>Prefeitura<\/b><br/>Cidade: Almirante Tamandaré<br/>Tipo: outdoor","<b>Dona Suzana<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: indoor","<b>Dona Eliete<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: outdoor","<b>Escola Madalena<\/b><br/>Cidade: Campo Largo<br/>Tipo: outdoor","<b>Dona Eliete<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: indoor","<b>Escola Cândido<\/b><br/>Cidade: Almirante Tamandaré<br/>Tipo: outdoor","<b>Prefeitura<\/b><br/>Cidade: Itaperuçú<br/>Tipo: outdoor","<b>Defesa Civil<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: indoor","<b>SME<\/b><br/>Cidade: Campo Largo<br/>Tipo: outdoor","<b>Escola Hilda<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: outdoor","<b>Escola Cândidos<\/b><br/>Cidade: Itaperuçú<br/>Tipo: outdoor","<b>Defesa Civil<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: outdoor","<b>SMMA<\/b><br/>Cidade: Campo Largo<br/>Tipo: outdoor","<b>Embrapa<\/b><br/>Cidade: Colombo<br/>Tipo: outdoor","<b>João Apolinário<\/b><br/>Cidade: Itaperuçú<br/>Tipo: outdoor","<b>Pombas<\/b><br/>Cidade: Itaperuçú<br/>Tipo: outdoor","<b>Colégio José Ermírio<\/b><br/>Cidade: Rio Branco do Sul<br/>Tipo: outdoor"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLegend","args":[{"colors":["#66C2A5","#FC8D62","#8DA0CB","#E78AC3","#A6D854"],"labels":["Almirante Tamandaré","Campo Largo","Colombo","Itaperuçú","Rio Branco do Sul"],"na_color":null,"na_label":"NA","opacity":0.5,"position":"bottomright","type":"factor","title":"Cidade","extra":null,"layerId":null,"className":"info legend","group":null}]}],"limits":{"lat":[-25.4767122,-25.179019],"lng":[-49.56748,-49.15776772]}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 
@@ -423,7 +451,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/jessicajcss\.github\.io\/rmc_qualidadedoar_report\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -750,7 +778,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script>
-<nav class="page-navigation">
+<nav class="page-navigation column-page-right">
   <div class="nav-page nav-page-previous">
       <a href="./05-fontes-meteo.html" class="pagination-link" aria-label="Meteorologia e Potenciais Fontes (Polar / Vento)">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Meteorologia e Potenciais Fontes (Polar / Vento)</span></span>
@@ -769,7 +797,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/load_cached_data.R"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#source("scripts/load_cached_data.R")</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>Caso os dados de localização estejam no objeto <span class="in">`localizacao`</span>, geramos mapa interativo dos sensores.</span>
@@ -796,6 +824,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Relatório Técnico — Qualidade do Ar (RMC)</p>
+</div>   
+    <div class="nav-footer-center">
+<!-- center footer (optional) -->
+</div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
 
 
 

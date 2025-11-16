@@ -19,9 +19,23 @@ Adicione os arquivos fornecidos abaixo.
 
 3. Testar renderização local
 Rode: source("scripts/install_packages.R")
+'
+source("scripts/install_packages.R")
+
+quarto render --clean
+source("scripts/install_packages.R")
+##Passos para executar localmente (recomendado)
+
+#No RStudio console (na raiz do projeto):
+source("scripts/install_packages.R")
+source("scripts/00-load_data.R", local = FALSE) # garante criação de objetos no GlobalEnv
+source("scripts/check_data.R") # executa diagnóstico
+'
+
 Renderize o livro: no terminal RStudio ou shell
 Code
 quarto render
+
 Resultado será criado em _book/.
 
 4. Criar repositório GitHub

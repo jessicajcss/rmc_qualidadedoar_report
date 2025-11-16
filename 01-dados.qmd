@@ -12,7 +12,7 @@ source("scripts/load_cached_data.R")
 ## Objetos carregados
 
 ```{r}
-source("scripts/load_cached_data.R")
+#source("scripts/load_cached_data.R")
 
 ls()
 ```
