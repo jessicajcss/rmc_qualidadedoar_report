@@ -1,3 +1,4 @@
+source("renv/activate.R")
 # .Rprofile do projeto - carrega automaticamente cache de dados para sessões R iniciadas no diretório do projeto
 
 try({

@@ -1,27 +1,37 @@
-# This workflow builds and publishes the Quarto book to GitHub Pages
-# Optimizations: Caches R packages and TinyTeX to reduce build time from ~15-20 min to ~3-5 min
-name: Build and Publish Quarto Book
-
+# Optimized Quarto build + publish workflow
+# - fixes indentation issues
+# - defines R_LIBS_USER so the package cache is consistent
+# - caches R library and TinyTeX to speed repeated runs
+# - installs system deps more quietly and cleans up to reduce IO
+# - uses renv restore if renv.lock is present, otherwise runs scripts/install_packages.R
+# - ensures TinyTeX install is idempotent
+# - checkout uses fetch-depth: 0 so gh-pages push works reliably
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
+name: Build and Publish Quarto Book
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    permissions:
-      contents: write
+    env:
+      # A reproducible per-repo library location for caching
+      R_LIBS_USER: ${{ github.workspace }}/.Rlibs
+      # If you use renv elsewhere you can reuse this path
+      RENV_PATHS_ROOT: ~/.local/share/renv
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Install system dependencies
+      - name: Install system dependencies
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y \
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
             libcurl4-openssl-dev \
             libssl-dev \
             libxml2-dev \
@@ -37,8 +47,10 @@ jobs:
             libfreetype6-dev \
             libtiff5-dev \
             libjpeg-dev
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
 
-      - name: Setup Quarto
+      - name: Setup Quarto CLI
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Setup R
@@ -46,36 +58,45 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Ensure R library folder exists
+        run: mkdir -p "${{ env.R_LIBS_USER }}"
+
       - name: Cache R packages
-        # Caches R packages to speed up subsequent runs from ~15-20 min to ~3-5 min
-        # Cache is invalidated when scripts/install_packages.R changes
+        # cache invalidated when scripts/install_packages.R or renv.lock changes
         uses: actions/cache@v4
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-r-${{ hashFiles('scripts/install_packages.R') }}
+          key: ${{ runner.os }}-r-${{ hashFiles('scripts/install_packages.R') }}-${{ hashFiles('**/renv.lock') }}
           restore-keys: |
             ${{ runner.os }}-r-
 
-      - name: Install R packages (project)
-        run: Rscript scripts/install_packages.R
+      - name: Install / Restore R packages
+        # Use renv if renv.lock exists, otherwise run the project's install script
+        run: |
+          if [ -f renv.lock ]; then
+            Rscript -e 'if (!requireNamespace("renv", quietly=TRUE)) install.packages("renv", repos="https://packagemanager.rstudio.com/all/latest"); renv::restore(prompt = FALSE)'
+          else
+            Rscript scripts/install_packages.R
+          fi
 
       - name: Cache TinyTeX
-        # Caches TinyTeX installation to save 1-2 minutes on subsequent runs
         uses: actions/cache@v4
         with:
           path: ~/.TinyTeX
-          key: ${{ runner.os }}-tinytex
+          key: ${{ runner.os }}-tinytex-v1
           restore-keys: |
-            ${{ runner.os }}-tinytex
+            ${{ runner.os }}-tinytex-
 
-      - name: Install Quarto
-        run: quarto install tinytex
+      - name: Ensure TinyTeX is installed
+        run: |
+          Rscript -e 'if (!requireNamespace("tinytex", quietly=TRUE)) install.packages("tinytex", repos="https://packagemanager.rstudio.com/all/latest")'
+          Rscript -e 'if (!tinytex::is_tinytex()) tinytex::install_tinytex(force = FALSE)'
 
       - name: Render Quarto book
         run: quarto render
         env:
           RENV_CONFIG_ACTIVE: FALSE
-          # garante que R leia o .Rprofile do repositório (apenas se necessário)
+          # ensure R reads repo .Rprofile if your build depends on it
           R_PROFILE_USER: ${{ github.workspace }}/.Rprofile
 
       - name: Publish _book to gh-pages
