@@ -104,4 +104,4 @@ jobs:
         with:
           publish_branch: gh-pages
           publish_dir: ./_book
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.MY.GHTOKEN }}
