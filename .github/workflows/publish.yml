@@ -21,7 +21,22 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev fonts-dejavu-core
+          sudo apt-get install -y \
+            libcurl4-openssl-dev \
+            libssl-dev \
+            libxml2-dev \
+            fonts-dejavu-core \
+            libgdal-dev \
+            libproj-dev \
+            libgeos-dev \
+            libudunits2-dev \
+            libcairo2-dev \
+            libpng-dev \
+            libharfbuzz-dev \
+            libfribidi-dev \
+            libfreetype6-dev \
+            libtiff5-dev \
+            libjpeg-dev
 
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
