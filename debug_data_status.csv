@@ -1,0 +1,9 @@
+object,present,info,rows,cols
+localizacao,TRUE,data.frame/tibble (19 x 5),19,5
+Poltab,TRUE,data.frame/tibble (6 x 4),6,4
+AQItab,TRUE,data.frame/tibble (6 x 4),6,4
+meteo_hour,TRUE,data.frame/tibble (56223 x 10),56223,10
+Datafinal,TRUE,data.frame/tibble (1495 x 17),1495,17
+air_quality_data_ugm3,TRUE,data.frame/tibble (36848 x 9),36848,9
+purpleair,TRUE,data.frame/tibble (22983 x 8),22983,8
+df_instantaneo,TRUE,data.frame/tibble (472373 x 9),472373,9

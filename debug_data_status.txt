@@ -1,0 +1,10 @@
+Data status report - 2025-11-18 16:29:39.911578
+
+localizacao: present=TRUE | info=data.frame/tibble (19 x 5)
+Poltab: present=TRUE | info=data.frame/tibble (6 x 4)
+AQItab: present=TRUE | info=data.frame/tibble (6 x 4)
+meteo_hour: present=TRUE | info=data.frame/tibble (56223 x 10)
+Datafinal: present=TRUE | info=data.frame/tibble (1495 x 17)
+air_quality_data_ugm3: present=TRUE | info=data.frame/tibble (36848 x 9)
+purpleair: present=TRUE | info=data.frame/tibble (22983 x 8)
+df_instantaneo: present=TRUE | info=data.frame/tibble (472373 x 9)
