@@ -1,19 +1,24 @@
-# Adapted Build & Publish Quarto Book workflow that uses renv.
-# - Restores packages from renv.lock when present (recommended).
-# - Optionally snapshots and commits an updated renv.lock back to the repo if you set UPDATE_RENV_LOCK=true.
-# - Caches renv artifacts to speed up runs.
-# - Adjust R/Quarto versions and the book path (_book) as needed.
+# Build & Publish Quarto Book using renv snapshot/restore.
+# Fixes the "Unrecognized named-value: 'runner'" error by using the runtime env var $RUNNER_TEMP
+# instead of the expression runner.temp in top-level/job env.
 #
-# Usage notes:
-# - Recommended: keep renv.lock in repo and let CI run renv::restore() before rendering.
-# - If you want CI to produce a new renv.lock and push it back, set repo secret UPDATE_RENV_LOCK=true (or set an environment variable in a manual dispatch).
+# Behavior:
+# - If renv.lock exists: renv::restore() to reproduce local environment.
+# - If renv.lock is missing: renv::snapshot() is run to create renv.lock.
+# - Optionally push an updated renv.lock back to the main branch when UPDATE_RENV_LOCK=true.
+# - Caches renv library & cache to speed up runs.
+#
+name: Build and Publish Quarto Book
+
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
+# Use the runner-provided temp path at runtime. Do NOT use expressions like ${{ runner.temp }} here,
+# because runner.* is not recognized in this top-level/env context and causes the error you saw.
 env:
-  R_LIBS_USER: ${{ runner.temp }}/R_libs
+  R_LIBS_USER: $RUNNER_TEMP/R_libs
 
 jobs:
   build-deploy:
@@ -25,7 +30,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # needed if we will update renv.lock and push
+          fetch-depth: 0
 
       - name: Install system dependencies
         run: |
@@ -41,9 +46,9 @@ jobs:
         uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
-          # r-version: '4.3' # uncomment and pin if you want a specific R version
+          # Uncomment to pin R: r-version: '4.3'
 
-      - name: Cache renv (library & cache)
+      - name: Cache renv libraries & R user library
         uses: actions/cache@v4
         id: cache-renv
         with:
@@ -52,38 +57,51 @@ jobs:
             renv/cache
             ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
 
-      - name: Ensure renv is available
+      - name: Ensure renv is installed
         run: |
           Rscript -e "if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv', repos='https://cloud.r-project.org')"
 
-      - name: Restore or Snapshot renv
-        # If renv.lock exists -> restore (recommended). Otherwise create a snapshot.
+      - name: Restore from renv.lock or snapshot (create renv.lock)
         run: |
           if [ -f renv.lock ]; then
-            echo "renv.lock found — restoring project library"
+            echo "renv.lock found — restoring packages"
             Rscript -e "renv::restore(prompt = FALSE)"
           else
-            echo "No renv.lock found — creating a lock with renv::snapshot()"
-            # snapshot will write renv.lock in repo workspace
+            echo "No renv.lock found — snapshotting current project packages into renv.lock"
             Rscript -e "renv::snapshot(prompt = FALSE)"
           fi
 
-
-      - name: Quarto check (nonblocking)
+      - name: (Optional) Commit & push updated renv.lock back to main
+        if: ${{ env.UPDATE_RENV_LOCK == 'true' && always() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          quarto check || true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git status --porcelain | grep -q renv.lock; then
+            git add renv.lock
+            git commit -m "chore: update renv.lock (CI snapshot)"
+            git push origin HEAD:main
+            echo "renv.lock committed and pushed."
+          else
+            echo "No changes to renv.lock."
+          fi
+
+      - name: Quarto check (non-blocking)
+        run: quarto check || true
 
       - name: Render Quarto book
+        # If your book root is not the repo root, add `working-directory: path/to/book` on this step.
         run: |
-          # If your book root is a subdirectory, add working-directory: path/to/book to this step
+          # Keep renv activated so the render uses the restored project library.
           quarto render --no-cache
-        # Do not force RENV_CONFIG_ACTIVE=FALSE: we want renv activation to use the restored project library.
-        # If you have a specific reason to disable activation, add env: RENV_CONFIG_ACTIVE: FALSE
 
       - name: Verify output and list files
         run: |
-          for d in _site _book docs public; do
+          for d in _site _book docs public .quarto/render; do
             if [ -d "$d" ]; then
               echo "---- $d ----"
               find "$d" -maxdepth 2 -type f | sed -n '1,200p'
