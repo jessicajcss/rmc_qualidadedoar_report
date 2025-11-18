@@ -94,3 +94,11 @@ Se usar Actions, a publicação é automática.
 Adicionar LICENSE (ex: MIT).
 Adicionar badges (GitHub Actions status).
 Ajustar tema e favicon (colocar em www/ e referenciar em _quarto.yml).
+
+
+
+########################
+install.packages("renv")
+renv::init()
+renv::status()
+renv::snapshot()
