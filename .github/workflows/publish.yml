@@ -1,13 +1,5 @@
-# Build & Publish Quarto Book using renv snapshot/restore.
-# Fixes the "Unrecognized named-value: 'runner'" error by using the runtime env var $RUNNER_TEMP
-# instead of the expression runner.temp in top-level/job env.
-#
-# Behavior:
-# - If renv.lock exists: renv::restore() to reproduce local environment.
-# - If renv.lock is missing: renv::snapshot() is run to create renv.lock.
-# - Optionally push an updated renv.lock back to the main branch when UPDATE_RENV_LOCK=true.
-# - Caches renv library & cache to speed up runs.
-#
+# Build & Publish Quarto Book — fixes renv::restore failure for 'units' by installing required system libs.
+# Installs system dependencies (including udunits/gdal/proj/geos), restores renv, renders the book, and publishes _book to gh-pages.
 name: Build and Publish Quarto Book
 
 on:
@@ -15,9 +7,8 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-# Use the runner-provided temp path at runtime. Do NOT use expressions like ${{ runner.temp }} here,
-# because runner.* is not recognized in this top-level/env context and causes the error you saw.
 env:
+  # Use the runner provided temp directory for per-run R library installs
   R_LIBS_USER: $RUNNER_TEMP/R_libs
 
 jobs:
@@ -32,10 +23,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install system dependencies
+      - name: Install system dependencies (including udunits/geospatial libs)
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev fonts-dejavu-core
+          # Basic build deps commonly required by R package compilation
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake pkg-config \
+            libcurl4-openssl-dev libssl-dev libxml2-dev \
+            fonts-dejavu-core
+          # udunits (required by the 'units' R package)
+          sudo apt-get install -y --no-install-recommends \
+            udunits-bin libudunits2-dev
+          # Common geospatial libs sometimes required by spatial packages
+          sudo apt-get install -y --no-install-recommends \
+            gdal-bin libgdal-dev libproj-dev libgeos-dev
+          sudo apt-get clean
 
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
@@ -46,7 +48,7 @@ jobs:
         uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
-          # Uncomment to pin R: r-version: '4.3'
+          # r-version: '4.3'  # pin if you want to match local R exactly
 
       - name: Cache renv libraries & R user library
         uses: actions/cache@v4
@@ -67,36 +69,19 @@ jobs:
       - name: Restore from renv.lock or snapshot (create renv.lock)
         run: |
           if [ -f renv.lock ]; then
-            echo "renv.lock found — restoring packages"
+            echo "renv.lock found — restoring project library"
             Rscript -e "renv::restore(prompt = FALSE)"
           else
             echo "No renv.lock found — snapshotting current project packages into renv.lock"
             Rscript -e "renv::snapshot(prompt = FALSE)"
           fi
 
-      - name: (Optional) Commit & push updated renv.lock back to main
-        if: ${{ env.UPDATE_RENV_LOCK == 'true' && always() }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git status --porcelain | grep -q renv.lock; then
-            git add renv.lock
-            git commit -m "chore: update renv.lock (CI snapshot)"
-            git push origin HEAD:main
-            echo "renv.lock committed and pushed."
-          else
-            echo "No changes to renv.lock."
-          fi
-
       - name: Quarto check (non-blocking)
         run: quarto check || true
 
       - name: Render Quarto book
-        # If your book root is not the repo root, add `working-directory: path/to/book` on this step.
+        # If your book root is a subdirectory, add `working-directory: path/to/book` to this step.
         run: |
-          # Keep renv activated so the render uses the restored project library.
           quarto render --no-cache
 
       - name: Verify output and list files
