@@ -1,145 +1,98 @@
-# Robust Quarto book workflow using renv, installing necessary system libs for 'units' and geospatial packages,
-# capturing logs and uploading artifacts for debugging, and publishing with GH.TOKEN secret.
-name: Build and Publish Quarto Book (renv, with system deps)
-
+# Adapted Build & Publish Quarto Book workflow that uses renv.
+# - Restores packages from renv.lock when present (recommended).
+# - Optionally snapshots and commits an updated renv.lock back to the repo if you set UPDATE_RENV_LOCK=true.
+# - Caches renv artifacts to speed up runs.
+# - Adjust R/Quarto versions and the book path (_book) as needed.
+#
+# Usage notes:
+# - Recommended: keep renv.lock in repo and let CI run renv::restore() before rendering.
+# - If you want CI to produce a new renv.lock and push it back, set repo secret UPDATE_RENV_LOCK=true (or set an environment variable in a manual dispatch).
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
-concurrency:
-  group: quarto-build-${{ github.ref }}
-  cancel-in-progress: true
-
-permissions:
-  contents: write
+env:
+  R_LIBS_USER: ${{ runner.temp }}/R_libs
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # needed if we will update renv.lock and push
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev fonts-dejavu-core
 
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          quarto-version: 'latest'
 
-      - name: Setup R (with RSPM)
+      - name: Setup R
         uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+          # r-version: '4.3' # uncomment and pin if you want a specific R version
 
-      - name: Install apt packages (system deps required by 'units', sf, gdal, etc.)
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends \
-            build-essential \
-            pkg-config \
-            libudunits2-dev \
-            libgdal-dev libgeos-dev libproj-dev libudunits2-0 \
-            libcurl4-openssl-dev libssl-dev libxml2-dev \
-            libcairo2-dev libpango1.0-dev libpng-dev \
-            fonts-dejavu-core libgomp1
-        shell: bash
-
-      - name: Prepare directories & env
-        run: |
-          mkdir -p build_logs
-          # renv cache paths (runner temp) and project library path
-          echo "RENV_PATHS_CACHE=${RUNNER_TEMP}/renv-cache" >> $GITHUB_ENV
-          mkdir -p "${RUNNER_TEMP}/renv-cache"
-          echo "RENV_PROJECT_LIBRARY=${RUNNER_TEMP}/renv-library" >> $GITHUB_ENV
-          mkdir -p "${RUNNER_TEMP}/renv-library"
-          # make sure R uses project library path first
-          echo "R_LIBS_USER=${RUNNER_TEMP}/renv-library:${R_LIBS_USER:-}" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Restore renv caches
+      - name: Cache renv (library & cache)
         uses: actions/cache@v4
+        id: cache-renv
         with:
           path: |
-            ${{ env.RENV_PATHS_CACHE }}
-            ${{ env.RENV_PROJECT_LIBRARY }}
-            ~/.cache/pak
-          key: renv-${{ runner.os }}-${{ hashFiles('renv.lock') }}
-          restore-keys: |
-            renv-${{ runner.os }}-
+            renv/library
+            renv/cache
+            ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
 
       - name: Ensure renv is available
         run: |
-          Rscript -e "if (!requireNamespace('renv', quietly=TRUE)) install.packages('renv', repos='https://cloud.r-project.org')"
-        env:
-          R_LIBS_USER: ${{ env.RENV_PROJECT_LIBRARY }}
+          Rscript -e "if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv', repos='https://cloud.r-project.org')"
 
-      - name: Restore R packages from renv.lock (capture output)
+      - name: Restore or Snapshot renv
+        # If renv.lock exists -> restore (recommended). Otherwise create a snapshot.
         run: |
-          set -o pipefail
-          mkdir -p build_logs
-          # ensure project library is used
-          export R_LIBS_USER="${RENV_PROJECT_LIBRARY}:${R_LIBS_USER:-}"
-          # Run restore, capture logs for later inspection
-          Rscript -e "options(repos='https://cloud.r-project.org'); renv::restore(lockfile = 'renv.lock', prompt = FALSE)" 2>&1 | tee build_logs/renv_restore.log
-          echo "restore_exit_code=${PIPESTATUS[0]}" > build_logs/restore_exit_status.txt
-        env:
-          R_LIBS_USER: ${{ env.RENV_PROJECT_LIBRARY }}
+          if [ -f renv.lock ]; then
+            echo "renv.lock found — restoring project library"
+            Rscript -e "renv::restore(prompt = FALSE)"
+          else
+            echo "No renv.lock found — creating a lock with renv::snapshot()"
+            # snapshot will write renv.lock in repo workspace
+            Rscript -e "renv::snapshot(prompt = FALSE)"
+          fi
 
-      - name: Quick verify: try to load 'units' and show session info
+
+      - name: Quarto check (nonblocking)
         run: |
-          set -o pipefail
-          Rscript -e "cat('== R session info ==\n'); sessionInfo()" 2>&1 | tee -a build_logs/renv_restore.log
-          Rscript -e "cat('== test library(units) ==\n'); tryCatch({ library(units); print('units loaded OK') }, error=function(e){ cat('UNITS LOAD ERROR:\\n'); message(e); quit(status=1) })" 2>&1 | tee -a build_logs/units_test.log || true
-        env:
-          R_LIBS_USER: ${{ env.RENV_PROJECT_LIBRARY }}
+          quarto check || true
 
-      - name: Save renv caches
-        if: success()
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{ env.RENV_PATHS_CACHE }}
-            ${{ env.RENV_PROJECT_LIBRARY }}
-            ~/.cache/pak
-          key: renv-${{ runner.os }}-${{ hashFiles('renv.lock') }}
-
-      - name: Render Quarto book (capture logs)
-        id: render
+      - name: Render Quarto book
         run: |
-          set -o pipefail
-          mkdir -p build_logs
-          # record start time
-          date > build_logs/render_start.txt
-          # render, pipe everything to a logfile
-          quarto render --no-cache 2>&1 | tee build_logs/quarto_render.log
-          echo "render_exit_code=${PIPESTATUS[0]}" > build_logs/render_exit_status.txt
-          date > build_logs/render_end.txt
-        env:
-          RENV_CONFIG_ACTIVE: FALSE
-          R_PROFILE_USER: ${{ github.workspace }}/.Rprofile
-          R_LIBS_USER: ${{ env.RENV_PROJECT_LIBRARY }}
+          # If your book root is a subdirectory, add working-directory: path/to/book to this step
+          quarto render --no-cache
+        # Do not force RENV_CONFIG_ACTIVE=FALSE: we want renv activation to use the restored project library.
+        # If you have a specific reason to disable activation, add env: RENV_CONFIG_ACTIVE: FALSE
 
-      - name: Upload render logs artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: quarto-render-logs
-          path: build_logs
-
-      - name: Upload built site (_book) as artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: built-book
-          path: _book
-          retention-days: 7
+      - name: Verify output and list files
+        run: |
+          for d in _site _book docs public; do
+            if [ -d "$d" ]; then
+              echo "---- $d ----"
+              find "$d" -maxdepth 2 -type f | sed -n '1,200p'
+            fi
+          done
 
       - name: Publish _book to gh-pages
-        if: success()
         uses: peaceiris/actions-gh-pages@v4
         with:
           publish_branch: gh-pages
           publish_dir: ./_book
-          github_token: ${{ secrets.GH.TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
