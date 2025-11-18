@@ -1,0 +1,101 @@
+# Build & Publish Quarto Book — fixes renv::restore failure for 'units' by installing required system libs.
+# Installs system dependencies (including udunits/gdal/proj/geos), restores renv, renders the book, and publishes _book to gh-pages.
+name: Build and Publish Quarto Book
+
+on:
+#  push:
+ #   branches: [ main ]
+#  workflow_dispatch:
+
+env:
+  # Use the runner provided temp directory for per-run R library installs
+  R_LIBS_USER: $RUNNER_TEMP/R_libs
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install system dependencies (including udunits/geospatial libs)
+        run: |
+          sudo apt-get update -y
+          # Basic build deps commonly required by R package compilation
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake pkg-config \
+            libcurl4-openssl-dev libssl-dev libxml2-dev \
+            fonts-dejavu-core
+          # udunits (required by the 'units' R package)
+          sudo apt-get install -y --no-install-recommends \
+            udunits-bin libudunits2-dev
+          # Common geospatial libs sometimes required by spatial packages
+          sudo apt-get install -y --no-install-recommends \
+            gdal-bin libgdal-dev libproj-dev libgeos-dev
+          sudo apt-get clean
+
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          quarto-version: 'latest'
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+          # r-version: '4.3'  # pin if you want to match local R exactly
+
+      - name: Cache renv libraries & R user library
+        uses: actions/cache@v4
+        id: cache-renv
+        with:
+          path: |
+            renv/library
+            renv/cache
+            ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
+
+      - name: Ensure renv is installed
+        run: |
+          Rscript -e "if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv', repos='https://cloud.r-project.org')"
+
+      - name: Restore from renv.lock or snapshot (create renv.lock)
+        run: |
+          if [ -f renv.lock ]; then
+            echo "renv.lock found — restoring project library"
+            Rscript -e "renv::restore(prompt = FALSE)"
+          else
+            echo "No renv.lock found — snapshotting current project packages into renv.lock"
+            Rscript -e "renv::snapshot(prompt = FALSE)"
+          fi
+
+      - name: Quarto check (non-blocking)
+        run: quarto check || true
+
+      - name: Render Quarto book
+        # If your book root is a subdirectory, add `working-directory: path/to/book` to this step.
+        run: |
+          quarto render --no-cache
+
+      - name: Verify output and list files
+        run: |
+          for d in _site _book docs public .quarto/render; do
+            if [ -d "$d" ]; then
+              echo "---- $d ----"
+              find "$d" -maxdepth 2 -type f | sed -n '1,200p'
+            fi
+          done
+
+      - name: Publish _book to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          publish_branch: gh-pages
+          publish_dir: ./_book
+          github_token: ${{ secrets.GITHUB_TOKEN }}
