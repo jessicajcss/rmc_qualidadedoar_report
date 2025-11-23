@@ -3,6 +3,7 @@
 ## Last update: 2025-03-13
 
 
+# ALL DATA LOCAL TIME, INMET converted to GMT-3
 
 # Refs:
 
@@ -103,6 +104,30 @@ convert_to_df <- function(data) {
 
 
 Sys.setenv(INMET_TOKEN = "VnM1Vzg3MFFweVNhT2Npc3FLelpva2w4R005QzJOeG4=Vs5W870QpySaOcisqKzZokl8GM9C2Nxn")
+
+# Exampledate# Example usage ----
+start_date <- "2023-01-01" #"2023-06-01" # máximo de um ano!!
+end_date <- "2023-12-31"
+station_code <- "D2694"
+seu_token <- Sys.getenv("INMET_TOKEN")
+
+data2023 <- download_data(start_date, end_date, station_code)
+
+library(tidyverse)
+meteo <- bind_rows(data2023,
+                           data2024,
+                           data2025)
+
+meteo <- convert_to_df(meteo)
+
+
+# Print the first few rows
+print(head(meteo))
+
+
+
+
+
 
 
 
